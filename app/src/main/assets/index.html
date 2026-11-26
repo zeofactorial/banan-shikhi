@@ -26,6 +26,37 @@ button{font-family:inherit;cursor:pointer}
 .tabs{margin-top:auto;height:68px;background:#fff;border-top:1px solid #ECE7DD;display:flex}
 .tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--mut);gap:2px}
 .tabs .a{color:var(--p);font-weight:600}
+#kb{background:#E5E7EB;padding:8px 4px calc(8px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none;touch-action:none}
+#kbtop{display:flex;justify-content:space-between;align-items:center;padding:0 6px 6px;min-height:32px}
+#entog{border:0;background:#fff;color:#374151;font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 #B8BEC6}
+#hlp{border:0;background:#fff;color:#374151;font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 #B8BEC6}
+#romline{min-height:20px;font-size:14px;color:var(--mut);margin-top:6px;font-family:sans-serif}
+.k.lang{background:#CBD0D6;flex:1.45;font-size:15px;font-weight:700}
+.k.q{flex:1}
+#help{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;z-index:30;align-items:center;justify-content:center;padding:18px}
+#help.on{display:flex}
+#help .box{background:#fff;border-radius:20px;padding:20px;max-width:420px;max-height:84%;overflow:auto;font-size:15px;line-height:1.7}
+#help b{font-family:sans-serif;color:var(--p)}
+#entog.on{background:var(--p);color:#fff}
+.kr{display:flex;gap:4px;margin-bottom:8px;justify-content:center}
+.k{position:relative;flex:1;min-width:0;height:50px;border-radius:8px;background:#fff;box-shadow:0 1px 0 #B8BEC6;display:flex;align-items:center;justify-content:center;font-size:23px;color:#111827;touch-action:none;-webkit-user-select:none;user-select:none}
+.k.dn{background:#D1D5DB}
+.k.sp{background:#CBD0D6;flex:1.45;font-size:15px;font-weight:600}
+.k.sp.on{background:var(--p);color:#fff}
+.k.ent{background:var(--p);color:#fff;font-size:16px;font-weight:600;flex:2.4}
+.k.space{flex:6;font-size:14px;color:#6B7280}
+.k .al{position:absolute;top:3px;right:4px;font-size:11px;color:#6B7280;line-height:1}
+.k .ex{position:absolute;bottom:3px;right:4px;font-size:10px;color:#9CA3AF;line-height:1}
+.k .en{display:none;position:absolute;top:3px;left:4px;font-size:10px;color:#0F766E;font-family:sans-serif;font-weight:700;line-height:1;text-transform:uppercase}
+#kb.en .en{display:block}
+.k.half{flex:.5;visibility:hidden;box-shadow:none;background:transparent}
+#pop{position:fixed;display:none;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.25);padding:4px;gap:4px;z-index:20}
+#pop .po{width:46px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#F3F4F6}
+#pop .po.hv{background:var(--p);color:#fff}
+#ansbox{width:100%;min-height:60px;border:2px solid var(--p);border-radius:16px;padding:6px 18px;font-size:26px;background:#fff;color:var(--ink);display:flex;align-items:center;flex-wrap:wrap;word-break:break-word}
+#ansbox .ph{color:#9CA3AF;font-family:"NotoBn",sans-serif;font-size:18px}
+#ansbox .cr{display:inline-block;width:2px;height:30px;background:var(--p);margin-left:1px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
 #fb{position:absolute;left:0;right:0;bottom:0;padding:20px 22px calc(26px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;transform:translateY(105%);transition:transform .25s;z-index:5}
 #fb.show{transform:none}
 #fb.ok{background:#E6F6EC;color:#054F31}
@@ -71,13 +102,24 @@ button{font-family:inherit;cursor:pointer}
       <div id="chips" style="margin-top:10px"></div>
     </div>
     <div>
-      <label for="ans" style="display:block;font-size:15px;font-weight:600;margin-bottom:8px">শুদ্ধ বানান লেখো</label>
-      <input id="ans" class="bn" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:100%;height:60px;border:2px solid var(--p);border-radius:16px;padding:0 18px;font-size:26px;background:#fff;color:var(--ink)">
+      <div style="font-size:15px;font-weight:600;margin-bottom:8px">শুদ্ধ বানান লেখো</div>
+      <div id="ansbox" class="bn" aria-live="polite"></div>
+      <div id="romline"></div>
     </div>
     <button id="hint" style="align-self:flex-start;border:0;background:transparent;color:var(--p);font-size:16px;font-weight:600;min-height:44px;padding:8px 0">ইঙ্গিত দেখো</button>
     <div id="hinttxt" style="font-size:15px;color:var(--mut);margin-top:-8px"></div>
   </div>
-  <div class="pad" style="margin-top:auto;padding-bottom:calc(26px + env(safe-area-inset-bottom))"><button class="btn" id="check">যাচাই করো</button></div>
+  <div class="pad" style="margin-top:auto;padding-bottom:10px"><button class="btn" id="check" style="height:48px;font-size:17px">যাচাই করো</button></div>
+  <div id="kb"><div id="kbtop"><button id="hlp" style="visibility:hidden">? লেখার নিয়ম</button><button id="entog">ইংরেজি হরফ: বন্ধ</button></div><div id="rows"></div></div>
+  <div id="pop"></div>
+  <div id="help"><div class="box"><div style="font-size:18px;font-weight:700;margin-bottom:8px">ইংরেজি কিবোর্ডে বাংলা লেখার নিয়ম</div>
+  স্বরবর্ণ: অ=<b>o</b> আ=<b>a</b> ই=<b>i</b> ঈ=<b>I</b> উ=<b>u</b> ঊ=<b>U</b> ঋ=<b>rri</b> এ=<b>e</b> ঐ=<b>oi</b> ও=<b>O</b> ঔ=<b>ou</b><br>
+  ব্যঞ্জন: ক=<b>k</b> খ=<b>kh</b> গ=<b>g</b> ঘ=<b>gh</b> ঙ=<b>Ng</b> চ=<b>c</b> ছ=<b>ch</b> জ=<b>j</b> ঝ=<b>jh</b> ঞ=<b>NG</b><br>
+  ট=<b>T</b> ঠ=<b>Th</b> ড=<b>D</b> ঢ=<b>Dh</b> ণ=<b>N</b> ত=<b>t</b> থ=<b>th</b> দ=<b>d</b> ধ=<b>dh</b> ন=<b>n</b><br>
+  প=<b>p</b> ফ=<b>ph</b> ব=<b>b</b> ভ=<b>bh</b> ম=<b>m</b> য=<b>z</b> র=<b>r</b> ল=<b>l</b> শ=<b>sh</b> ষ=<b>Sh</b> স=<b>s</b> হ=<b>h</b><br>
+  ড়=<b>R</b> ঢ়=<b>Rh</b> য়=<b>y</b> ৎ=<b>t`</b> ং=<b>ng</b> ঃ=<b>:</b> ঁ=<b>^</b> ক্ষ=<b>kkh</b> জ্ঞ=<b>gg</b><br>
+  <div style="margin-top:8px">পরপর দুই ব্যঞ্জন দিলে যুক্ত হয় (<b>kt</b> = ক্ত)। আলাদা রাখতে মাঝে <b>o</b> দাও (<b>bon</b> = বন, <b>bn</b> = ব্ন)। বড় হাতের অক্ষরের জন্য শিফট চাপো।</div>
+  <button class="btn" id="hclose" style="margin-top:14px;height:46px;font-size:16px">বুঝেছি</button></div></div>
   <div id="fb"></div>
 </section>
 
@@ -147,11 +189,10 @@ function render(){
   $("fb").className="";$("hinttxt").textContent="";
   $("wrong").textContent=w.w;
   $("chips").innerHTML=w.b.map(function(b){return '<span class="chip">'+b+'</span>'}).join("");
-  $("ans").value="";$("ans").disabled=false;
+  typed="";roman="";drawAns();kbOn=true;
   $("check").textContent="যাচাই করো";
   $("qn").textContent=bn(Math.min(qi+1,Q.length))+" / "+bn(Q.length);
   $("qbar").style.width=Math.round(qi/Q.length*100)+"%";
-  setTimeout(function(){$("ans").focus()},150);
 }
 function hint(){
   var w=W[Q[qi]],a=w.a[0];
@@ -162,10 +203,10 @@ function hint(){
 }
 function check(){
   if(answered){next();return}
-  var val=norm($("ans").value);
-  if(!val){$("ans").focus();return}
+  var val=norm(getAns());
+  if(!val){return}
   var id=Q[qi],w=W[id],ok=w.a.some(function(a){return norm(a)===val});
-  answered=true;$("ans").disabled=true;$("ans").blur();
+  answered=true;kbOn=false;
   var s=D.s[id]||{b:0};
   var first=!(id in firstTry);
   if(first)firstTry[id]=ok&&!hintUsed;
@@ -179,7 +220,7 @@ function check(){
     if(wrongList.indexOf(id)<0)wrongList.push(id);
     if(!requeued[id]){requeued[id]=1;Q.push(id)}
     fb.className="no show";
-    fb.innerHTML='<div style="font-size:20px;font-weight:700">আবার দেখে নাও</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+$("ans").value.replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">সঠিক বানান</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
+    fb.innerHTML='<div style="font-size:20px;font-weight:700">আবার দেখে নাও</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+getAns().replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">সঠিক বানান</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
   }
   s.seen=1;D.s[id]=s;save();
   $("nx").onclick=next;
@@ -206,14 +247,151 @@ function finish(){
   D.tot=(D.tot||0)+1;save();
   show("done");
 }
+
+/* ---------- নিজস্ব কিবোর্ড (বাংলা + ইংরেজি/অভ্র) ---------- */
+var typed="",roman="",mode="bn",kbOn=false,shift=false,HS="\u09CD";
+var NK="\u09BC";
+var VOW={"rri":["ঋ","ৃ"],"oi":["ঐ","ৈ"],"ou":["ঔ","ৌ"],"OI":["ঐ","ৈ"],"OU":["ঔ","ৌ"],"ii":["ঈ","ী"],"ee":["ঈ","ী"],"oo":["উ","ু"],"aa":["আ","া"],
+ "a":["আ","া"],"i":["ই","ি"],"I":["ঈ","ী"],"u":["উ","ু"],"U":["ঊ","ূ"],"e":["এ","ে"],"O":["ও","ো"],"o":["অ",""]};
+var CON={"kkh":"ক"+HS+"ষ","ngkh":"ঙ"+HS+"খ","nggh":"ঙ"+HS+"ঘ","ngk":"ঙ"+HS+"ক","ngg":"ঙ"+HS+"গ","gg":"জ"+HS+"ঞ",
+ "NG":"ঞ","Ng":"ঙ","Rh":"ঢ"+NK,"R":"ড"+NK,"Dh":"ঢ","D":"ড","Th":"ঠ","T":"ট","dh":"ধ","d":"দ","th":"থ","t":"ত","kh":"খ","k":"ক","gh":"ঘ","g":"গ",
+ "ch":"ছ","c":"চ","jh":"ঝ","J":"ঝ","j":"জ","ph":"ফ","f":"ফ","p":"প","bh":"ভ","v":"ভ","b":"ব","m":"ম","n":"ন","N":"ণ","sh":"শ","Sh":"ষ","S":"শ","s":"স",
+ "h":"হ","l":"ল","r":"র","z":"য","x":"ক"+HS+"স","q":"ক"};
+var SIG={"t`":"ৎ","ng":"ং",":":"ঃ","^":"ঁ",".":"।"};
+function convert(r){
+  var out="",prev="S",i=0;
+  while(i<r.length){
+    var done=false;
+    for(var L=4;L>=1&&!done;L--){
+      var sub=r.substr(i,L);if(sub.length<L)continue;
+      if(SIG.hasOwnProperty(sub)){out+=SIG[sub];prev="V";i+=L;done=true;break}
+      if(sub==="y"||sub==="w"||sub==="Z"){
+        if(sub==="y")out+=(prev==="C")?HS+"য":"য"+NK;
+        else if(sub==="w"){if(prev==="C"){out+=HS+"ব"}else{out+="ও"}}
+        else out+=HS+"য";
+        prev=(sub==="w"&&prev!=="C")?"V":"C";i+=L;done=true;break}
+      if(VOW.hasOwnProperty(sub)){
+        var v=VOW[sub];
+        if(sub==="o"){if(prev==="S")out+="অ";else if(prev==="V")out+="ও"}
+        else out+=(prev==="C")?v[1]:v[0];
+        prev="V";i+=L;done=true;break}
+      if(CON.hasOwnProperty(sub)){
+        out+=(prev==="C"?HS:"")+CON[sub];prev="C";i+=L;done=true;break}
+    }
+    if(!done){out+=r.charAt(i);prev="S";i++}
+  }
+  return out;
+}
+function getAns(){return typed+convert(roman)}
+function drawAns(){
+  var b=$("ansbox"),c=convert(roman),t=typed.replace(/</g,"&lt;");
+  var body=t+(c?'<span style="border-bottom:2px dotted var(--p)">'+c.replace(/</g,"&lt;")+'</span>':"");
+  b.innerHTML=(body||'<span class="ph">কিবোর্ড দিয়ে লেখো</span>')+'<span class="cr"></span>';
+  $("romline").textContent=roman?("ইংরেজিতে লিখেছ: "+roman):"";
+}
+function commit(){if(roman){typed+=convert(roman);roman=""}}
+var R1=[["দ","ধ","q"],["ূ","ঊ","w"],["ী","ঈ","e"],["র","ড়","r","ৃ"],["ট","ঠ","t"],["এ","ঐ","y"],["ু","উ","u"],["ি","ই","i"],["ও","ঔ","o"],["প","ফ","p"],["ে","ৈ","["],["ো","ৌ","]"]];
+var R2=[["া","অ","a"],["স","ষ","s"],["ড","ঢ","d"],["ত","থ","f"],["গ","ঘ","g"],["হ","ঃ","h"],["জ","ঝ","j","ঞ"],["ক","খ","k"],["ল","ং","l"]];
+var R3=[["য়","য","z"],["শ","ঢ়","x"],["চ","ছ","c"],["আ","ঋ","v"],["ব","ভ","b"],["ন","ণ","n"],["ম","ঙ","m"],["ৎ","","<"],["্","ঁ","."]];
+var E1="qwertyuiop".split(""),E2="asdfghjkl".split(""),E3="zxcvbnm".split("");
+var act=null,timer=null,popOpen=false,rep=null,shiftEl;
+function ins(ch){if(!kbOn||answered)return;commit();typed+=ch;drawAns()}
+function insR(ch){if(!kbOn||answered)return;roman+=ch;drawAns()}
+function del(){if(!kbOn||answered)return;if(roman){roman=roman.slice(0,-1)}else{var a=Array.from(typed);a.pop();typed=a.join("")}drawAns()}
+function opts(k){var o=[];if(k[1])o.push(k[1]);if(k[3])o.push(k[3]);return o}
+function mkKey(k){
+  var d=document.createElement("div");d.className="k";d.setAttribute("role","button");
+  d.innerHTML=k[0]+(k[1]?'<span class="al">'+k[1]+'</span>':'')+(k[3]?'<span class="ex">'+k[3]+'</span>':'')+'<span class="en">'+k[2]+'</span>';
+  d.__k=k;d.__t="key";return d;
+}
+function mkEn(ch){var d=document.createElement("div");d.className="k";d.setAttribute("role","button");d.textContent=shift?ch.toUpperCase():ch;d.style.fontFamily="sans-serif";d.__t="en";d.__ch=shift?ch.toUpperCase():ch;return d}
+function mkSym(ch){var d=document.createElement("div");d.className="k q";d.textContent=ch;d.style.fontFamily="sans-serif";d.__t="sym";d.__ch=ch;d.setAttribute("role","button");return d}
+function mkSp(txt,cls,t){var d=document.createElement("div");d.className="k "+cls;d.textContent=txt;d.__t=t;d.setAttribute("role","button");return d}
+function row(keys,pre,post){
+  var r=document.createElement("div");r.className="kr";
+  if(pre){var h=document.createElement("div");h.className="k half";r.appendChild(h)}
+  keys.forEach(function(x){r.appendChild(x)});
+  if(post){var h2=document.createElement("div");h2.className="k half";r.appendChild(h2)}
+  $("rows").appendChild(r);
+}
+function buildKb(){
+  $("rows").innerHTML="";
+  shiftEl=mkSp("⇧","sp","shift");shiftEl.classList.toggle("on",shift);
+  var back=mkSp("⌫","sp","back");
+  var lang=mkSp(mode==="bn"?"EN":"বাং","lang","lang");
+  if(mode==="bn"){
+    row(R1.map(mkKey));row(R2.map(mkKey),true,true);
+    row([shiftEl].concat(R3.map(mkKey),[back]));
+    row([lang,mkSp("স্পেস","space","space"),mkSp("যাচাই","ent","enter")]);
+  }else{
+    row(E1.map(mkEn));row(E2.map(mkEn),true,true);
+    row([shiftEl].concat(E3.map(mkEn),[back]));
+    row([lang,mkSym("`"),mkSym(":"),mkSp("স্পেস","space","space"),mkSym("^"),mkSym("."),mkSp("যাচাই","ent","enter")]);
+  }
+  $("rows").lastChild.style.marginBottom="0";
+  $("hlp").style.visibility=mode==="en"?"visible":"hidden";
+  $("entog").style.visibility=mode==="bn"?"visible":"hidden";
+}
+function setShift(v){shift=v;if(mode==="en")buildKb();else shiftEl.classList.toggle("on",v)}
+function showPop(el,k){
+  var o=opts(k);if(!o.length)return false;
+  var p=$("pop");p.innerHTML=o.map(function(c){return '<div class="po">'+c+'</div>'}).join("");
+  p.style.display="flex";
+  var r=el.getBoundingClientRect(),w=o.length*50+8;
+  p.style.left=Math.max(4,Math.min(innerWidth-w-4,r.left+r.width/2-w/2))+"px";
+  p.style.top=(r.top-62)+"px";
+  popOpen=true;return true;
+}
+function hidePop(){$("pop").style.display="none";popOpen=false}
+function down(e){
+  var t=e.target.closest&&e.target.closest(".k");
+  if(!t||t.classList.contains("half"))return;
+  e.preventDefault();act=t;t.classList.add("dn");
+  if(t.__t==="key"){timer=setTimeout(function(){showPop(t,t.__k)},380)}
+  if(t.__t==="back"){del();timer=setTimeout(function(){rep=setInterval(del,70)},420)}
+}
+function move(e){
+  if(!popOpen)return;
+  var el=document.elementFromPoint(e.clientX,e.clientY),po=el&&el.closest?el.closest(".po"):null;
+  Array.prototype.forEach.call($("pop").children,function(c){c.classList.toggle("hv",c===po)});
+}
+function up(e){
+  clearTimeout(timer);clearInterval(rep);rep=null;
+  if(!act)return;
+  var t=act;act=null;t.classList.remove("dn");
+  if(popOpen){
+    var el=document.elementFromPoint(e.clientX,e.clientY),po=el&&el.closest?el.closest(".po"):null;
+    if(po)ins(po.textContent);
+    hidePop();setShift(false);return;
+  }
+  var ty=t.__t;
+  if(ty==="key"){var k=t.__k;ins(shift&&k[1]?k[1]:k[0]);setShift(false)}
+  else if(ty==="en"){insR(t.__ch);if(shift)setShift(false)}
+  else if(ty==="sym"){insR(t.__ch)}
+  else if(ty==="shift")setShift(!shift);
+  else if(ty==="space"){if(kbOn&&!answered){commit();typed+=" ";drawAns()}}
+  else if(ty==="lang"){commit();mode=mode==="bn"?"en":"bn";shift=false;buildKb();drawAns()}
+  else if(ty==="enter"){commit();drawAns();check()}
+}
+function cancel(){clearTimeout(timer);clearInterval(rep);rep=null;if(act)act.classList.remove("dn");act=null;hidePop()}
+buildKb();
+var kbe=$("kb");
+kbe.addEventListener("pointerdown",down);
+kbe.addEventListener("pointermove",move);
+kbe.addEventListener("pointerup",up);
+kbe.addEventListener("pointercancel",cancel);
+kbe.addEventListener("contextmenu",function(e){e.preventDefault()});
+["entog","hlp"].forEach(function(id){$(id).addEventListener("pointerdown",function(e){e.stopPropagation()})});
+$("entog").onclick=function(){var on=kbe.classList.toggle("en");this.classList.toggle("on",on);this.textContent="ইংরেজি হরফ: "+(on?"চালু":"বন্ধ")};
+$("hlp").onclick=function(){$("help").classList.add("on")};
+$("hclose").onclick=function(){$("help").classList.remove("on")};
 $("start").onclick=startSession;
 $("again").onclick=startSession;
 $("tohome").onclick=home;
 $("close").onclick=home;
 $("hint").onclick=hint;
 $("check").onclick=check;
-$("ans").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();check()}});
-window.appBack=function(){if(cur!=="home"){home();return true}return false};
+window.appBack=function(){if($("help").classList.contains("on")){$("help").classList.remove("on");return true}if(cur!=="home"){home();return true}return false};
 home();
 })();
 </script>
