@@ -63,6 +63,9 @@ button{font-family:inherit;cursor:pointer}
 #fb.show{transform:none}
 #fb.ok{background:#E6F6EC;color:#054F31}
 #fb.no{background:#FDECEA;color:#7A1A10}
+#quiz.flash #kb,#quiz.flash #ansgrp,#quiz.flash #hint,#quiz.flash #hinttxt,#quiz.flash #checkwrap,#quiz.flash #chips{display:none!important}
+#flashwrap{display:none}#quiz.flash #flashwrap{display:block}
+.pb{min-width:40px;height:36px;border:0;border-radius:10px;background:#fff;font-weight:700;font-size:15px;padding:0 8px}
 </style>
 </head>
 <body>
@@ -74,29 +77,9 @@ button{font-family:inherit;cursor:pointer}
     <div id="streak" style="background:#FDE7B0;color:#6B4A00;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:none;margin-left:10px"></div>
   </div>
   <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:16px;overflow:auto">
-    <div style="background:var(--p);color:#fff;border-radius:24px;padding:22px 22px 20px">
-      <div style="font-size:14px;opacity:.9">আজকের অনুশীলন</div>
-      <div style="font-size:26px;font-weight:700;margin:4px 0">শুদ্ধ বানান লেখো</div>
-      <div style="font-size:15px;opacity:.92;margin-bottom:18px">১০টা নতুন শব্দ, প্রায় ৫ মিনিট</div>
-      <button class="btn" id="start" style="background:#fff;color:var(--p)">শুরু করো</button>
-      <button class="btn" id="rtsp" style="display:none;margin-top:10px;height:46px;font-size:16px;background:transparent;color:#fff;border:2px solid #fff"></button>
-    </div>
-    <div style="background:#1E3A5F;color:#fff;border-radius:24px;padding:22px 22px 20px">
-      <div style="font-size:14px;opacity:.9">নতুন</div>
-      <div style="font-size:26px;font-weight:700;margin:4px 0">পরিভাষা শেখো</div>
-      <div style="font-size:15px;opacity:.92;margin-bottom:18px">ইংরেজি শব্দ দেখে বাংলা পরিভাষা লেখো</div>
-      <button class="btn" id="startp" style="background:#fff;color:#1E3A5F">শুরু করো</button>
-      <button class="btn" id="rtpr" style="display:none;margin-top:10px;height:46px;font-size:16px;background:transparent;color:#fff;border:2px solid #fff"></button>
-    </div>
-    <div class="card">
-      <div style="font-size:16px;font-weight:600;margin-bottom:12px">তোমার অগ্রগতি</div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:15px">বানান</div><div id="sppg" style="font-size:14px;color:var(--mut)"></div></div>
-      <div style="height:12px;border-radius:7px;background:var(--line);margin:8px 0 14px"><div id="spbar" style="height:12px;border-radius:7px;background:#F5B942;width:0"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:15px">পরিভাষা</div><div id="prpg" style="font-size:14px;color:var(--mut)"></div></div>
-      <div style="height:12px;border-radius:7px;background:var(--line);margin:8px 0 0"><div id="prbar" style="height:12px;border-radius:7px;background:#5B8DEF;width:0"></div></div>
-    </div>
+    <div id="decks" style="display:flex;flex-direction:column;gap:16px"></div>
     <div class="card"><div style="font-size:16px;font-weight:600;margin-bottom:4px">কীভাবে কাজ করে</div>
-      <div style="font-size:15px;color:#4B5563;line-height:1.55">প্রতিবার ১০টা নতুন শব্দ আসবে। ভুল হলে শব্দটা শেষে "ভুলগুলো আবার চেষ্টা করো" বাটনে আসবে, আর হোমেও থাকবে। যতদিন না ঠিক হয়, ততদিন ওখানে থেকে যাবে।</div></div>
+      <div style="font-size:15px;color:#4B5563;line-height:1.55">সব শব্দ একবার শেষ না হওয়া পর্যন্ত কোনো শব্দ আবার আসে না। ভুল হওয়া শব্দ পরের রাউন্ডে একবার করে ফিরে আসে। চাইলে "ভুল শব্দ আবার চেষ্টা" বাটন থেকে সঙ্গে সঙ্গেও চেষ্টা করা যায়। প্রতিবার কয়টা শব্দ, বা কত দিনে শেষ করতে চাও, তা নিজে ঠিক করে নিতে পারো।</div></div>
   </div>
   <div class="tabs"><div class="a">হোম</div><div></div><div></div></div>
 </section>
@@ -113,7 +96,8 @@ button{font-family:inherit;cursor:pointer}
       <div id="wrong" class="bn" style="font-size:46px;color:#B42318;line-height:1.35;word-break:break-word"></div>
       <div id="chips" style="margin-top:10px"></div>
     </div>
-    <div>
+    <div id="flashans" class="card" style="display:none;text-align:center;padding:20px 16px"><div style="font-size:14px;color:var(--mut);margin-bottom:6px">সঠিক উচ্চারণ</div><div id="flashtxt" class="bn" style="font-size:38px;color:#054F31;line-height:1.4;word-break:break-word"></div></div>
+    <div id="ansgrp">
       <div id="alabel" style="font-size:15px;font-weight:600;margin-bottom:8px">শুদ্ধ বানান লেখো</div>
       <div id="ansbox" class="bn" aria-live="polite"></div>
       <div id="romline"></div>
@@ -121,7 +105,11 @@ button{font-family:inherit;cursor:pointer}
     <button id="hint" style="align-self:flex-start;border:0;background:transparent;color:var(--p);font-size:16px;font-weight:600;min-height:44px;padding:8px 0">ইঙ্গিত দেখো</button>
     <div id="hinttxt" style="font-size:15px;color:var(--mut);margin-top:-8px"></div>
   </div>
-  <div class="pad" style="margin-top:auto;padding-bottom:10px"><button class="btn" id="check" style="height:48px;font-size:17px">যাচাই করো</button></div>
+  <div class="pad" id="checkwrap" style="margin-top:auto;padding-bottom:10px"><button class="btn" id="check" style="height:48px;font-size:17px">যাচাই করো</button></div>
+  <div class="pad" id="flashwrap" style="margin-top:auto;padding-bottom:calc(18px + env(safe-area-inset-bottom))">
+    <button class="btn" id="reveal" style="height:54px">উচ্চারণ দেখো</button>
+    <div id="rate" style="display:none;gap:12px"><button class="btn" id="fno" style="background:#B42318;flex:1">ভুল হয়েছিল</button><button class="btn" id="fok" style="background:#067647;flex:1">ঠিক বলেছিলাম</button></div>
+  </div>
   <div id="kb"><div id="kbtop"><button id="hlp" style="visibility:hidden">? লেখার নিয়ম</button><button id="entog">ইংরেজি হরফ: বন্ধ</button></div><div id="rows"></div></div>
   <div id="pop"></div>
   <div id="help"><div class="box"><div style="font-size:18px;font-weight:700;margin-bottom:8px">ইংরেজি কিবোর্ডে বাংলা লেখার নিয়ম</div>
@@ -154,6 +142,7 @@ button{font-family:inherit;cursor:pointer}
 </div>
 <script src="words.js"></script>
 <script src="terms.js"></script>
+<script src="pron.js"></script>
 <script>
 (function(){
 var DIG="০১২৩৪৫৬৭৮৯";
@@ -161,8 +150,8 @@ function bn(n){return String(n).replace(/\d/g,function(d){return DIG[d]})}
 function norm(s){return String(s).normalize("NFC").replace(/[‌‍]/g,"").replace(/\s+/g," ").trim()}
 function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
-var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[]}};
-DECKS.sp.D=loadK("banan_v1");DECKS.pr.D=loadK("parib_v1");
+var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[],shuf:1},pc:{key:"uccharon_v1",W:window.PRON||[],shuf:1}};
+for(var kk in DECKS)DECKS[kk].D=loadK(DECKS[kk].key);
 var dk="sp",W,N,D,isRetry=false;
 function setDeck(k){dk=k;W=DECKS[k].W;N=W.length;D=DECKS[k].D}
 function saveDeck(k){try{localStorage.setItem(DECKS[k].key,JSON.stringify(DECKS[k].D))}catch(e){}}
@@ -174,38 +163,74 @@ var cur="home";
 function day(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function wrongCount(k){var d=DECKS[k],c=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(s&&s.b===0)c++}return c}
 
-function home(){
-  ["sp","pr"].forEach(function(k){
-    var d=DECKS[k],n=d.W.length,l=0;
-    for(var i=0;i<n;i++){var s=d.D.s[i];if(s&&s.b>=2)l++}
-    $(k+"pg").textContent=bn(l)+" / "+bn(n);
-    $(k+"bar").style.width=(n?Math.max(2,Math.round(l/n*100)):0)+"%";
-    var r=wrongCount(k),bt=$(k==="sp"?"rtsp":"rtpr");
-    bt.textContent="ভুল শব্দ আবার চেষ্টা করো ("+bn(r)+")";
-    bt.style.display=r?"block":"none";
+var META={sp:{t:"শুদ্ধ বানান লেখো",s:"ভুল বানান দেখে শুদ্ধ বানান লেখো",c:"#0F766E"},pr:{t:"পরিভাষা শেখো",s:"ইংরেজি শব্দ দেখে বাংলা পরিভাষা লেখো",c:"#1E3A5F"},pc:{t:"শব্দের উচ্চারণ",s:"শব্দ দেখে উচ্চারণ ভাবো, তারপর মিলিয়ে নাও",c:"#7A2E1D"}};
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function remaining(k){var d=DECKS[k],cy=d.D.cy||1,r=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(!s||s.c!==cy||s.b===0)r++}return r||d.W.length}
+function homeDecks(){
+  var h="";
+  ["sp","pr","pc"].forEach(function(k){
+    var d=DECKS[k],n=d.W.length;if(!n)return;
+    var m=META[k],cy=d.D.cy||1,seen=0;
+    for(var i=0;i<n;i++){var s=d.D.s[i];if(s&&s.c===cy)seen++}
+    var size=d.D.n||10,rem=remaining(k),days=Math.ceil(rem/size),r=wrongCount(k);
+    var bt='data-k="'+k+'" style="color:'+m.c+'"';
+    h+='<div style="background:'+m.c+';color:#fff;border-radius:24px;padding:20px 20px 18px">'
+     +'<div style="font-size:24px;font-weight:700">'+m.t+'</div>'
+     +'<div style="font-size:15px;opacity:.92;margin:2px 0 12px">'+m.s+'</div>'
+     +'<div style="height:8px;border-radius:5px;background:rgba(255,255,255,.28);margin-bottom:6px"><div style="height:8px;border-radius:5px;background:#fff;width:'+Math.max(2,Math.round(seen/n*100))+'%"></div></div>'
+     +'<div style="font-size:14px;opacity:.95;margin-bottom:12px">মোট '+bn(n)+'টা শব্দ • এ চক্রে দেখা হয়েছে '+bn(seen)+' • বাকি '+bn(rem)+'</div>'
+     +'<button class="btn" data-k="'+k+'" data-a="go" style="background:#fff;color:'+m.c+'">শুরু করো ('+bn(Math.min(size,rem))+'টা শব্দ)</button>'
+     +(r?'<button class="btn" data-k="'+k+'" data-a="rt" style="margin-top:10px;height:46px;font-size:16px;background:transparent;color:#fff;border:2px solid #fff">ভুল শব্দ আবার চেষ্টা করো ('+bn(r)+')</button>':'')
+     +'<div style="background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:14px">'
+     +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap"><span>প্রতিবার কয়টা শব্দ</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="n" data-v="-5">−৫</button><button class="pb" '+bt+' data-a="n" data-v="-1">−</button><b style="min-width:30px;text-align:center;font-size:18px">'+bn(size)+'</b><button class="pb" '+bt+' data-a="n" data-v="1">+</button><button class="pb" '+bt+' data-a="n" data-v="5">+৫</button></span></div>'
+     +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>দিনে একবার করলে শেষ হবে</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="d" data-v="-1">−</button><b style="min-width:54px;text-align:center;font-size:18px">'+bn(days)+' দিনে</b><button class="pb" '+bt+' data-a="d" data-v="1">+</button></span></div>'
+     +'</div></div>';
   });
+  $("decks").innerHTML=h;
+}
+function home(){
+  homeDecks();
   var t=new Date(),y=new Date(Date.now()-864e5),st=DECKS.sp.D.st,n=st.n;
   if(st.last!==day(t)&&st.last!==day(y))n=0;
   $("streak").textContent=bn(n)+" দিন ধারাবাহিক";
   show("home");
 }
+$("decks").onclick=function(e){
+  var b=e.target.closest("button");if(!b||!b.dataset.k)return;
+  var k=b.dataset.k,a=b.dataset.a,v=+b.dataset.v;setDeck(k);
+  if(a==="go"){startSession(k,false)}
+  else if(a==="rt"){startSession(k,true)}
+  else if(a==="n"){D.n=clamp((D.n||10)+v,1,60);save();home()}
+  else if(a==="d"){var rem=remaining(k),T=clamp(Math.ceil(rem/(D.n||10))+v,1,rem);D.n=clamp(Math.ceil(rem/T),1,60);save();home()}
+};
 
 var Q=[],qi=0,firstTry={},wrongList=[],answered=false,hintUsed=false;
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-/* নতুন শব্দ আগে; না থাকলে শেখা শব্দ থেকে। ভুল (b=0) শব্দ এখানে আসে না, সেগুলো "আবার চেষ্টা"-য় থাকে */
+/* একটা চক্রে (cycle) সব শব্দ একবার করে আসবে, তার আগে কোনো শব্দ আবার নয়।
+   ভুল (b=0) শব্দ পরের রাউন্ডে একবার করে ফিরে আসবে। */
 function pick(){
-  var nw=[],rest=[];
-  for(var i=0;i<N;i++){var s=D.s[i];if(!s)nw.push(i);else if(s.b>=1)rest.push(i)}
-  rest=shuffle(rest);
-  rest.sort(function(a,b){return D.s[a].b-D.s[b].b});
-  var out=nw.slice(0,10);
-  for(var k=0;out.length<10&&k<rest.length;k++)out.push(rest[k]);
+  var size=D.n||10,cy=D.cy||1,pend=[],fresh=[],i,s;
+  for(i=0;i<N;i++){s=D.s[i];if(s&&s.b===0)pend.push(i);else if(!s||s.c!==cy)fresh.push(i)}
+  var out=shuffle(pend).slice(0,size);
+  if(DECKS[dk].shuf)fresh=shuffle(fresh);
+  var bumped=false;
+  while(out.length<size){
+    if(!fresh.length){
+      if(bumped)break;
+      bumped=true;cy=D.cy=(D.cy||1)+1;
+      for(i=0;i<N;i++){s=D.s[i];if(out.indexOf(i)<0&&!(s&&s.b===0))fresh.push(i)}
+      if(DECKS[dk].shuf)fresh=shuffle(fresh);
+      save();
+      if(!fresh.length)break;
+    }
+    out.push(fresh.shift());
+  }
   return shuffle(out);
 }
 function retryPick(){
   var r=[];
   for(var i=0;i<N;i++){var s=D.s[i];if(s&&s.b===0)r.push(i)}
-  return shuffle(r).slice(0,10);
+  return shuffle(r).slice(0,D.n||10);
 }
 function startSession(k,retry){
   setDeck(k);isRetry=!!retry;
@@ -218,6 +243,17 @@ function startSession(k,retry){
 function render(){
   var id=Q[qi],w=W[id],we=$("wrong");answered=false;hintUsed=false;
   $("fb").className="";$("hinttxt").textContent="";
+  $("quiz").classList.toggle("flash",dk==="pc");
+  if(dk==="pc"){
+    $("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের উচ্চারণ কী হবে?";
+    we.className="bn";we.style.cssText="font-size:44px;font-weight:600;color:#1F2937;line-height:1.35;word-break:break-word";
+    we.textContent=w.w;
+    $("flashans").style.display="none";$("reveal").style.display="block";$("rate").style.display="none";
+    kbOn=false;volMode(false);
+    $("qn").textContent=bn(Math.min(qi+1,Q.length))+" / "+bn(Q.length);
+    $("qbar").style.width=Math.round(qi/Q.length*100)+"%";
+    return;
+  }
   if(dk==="pr"){
     $("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের বাংলা পরিভাষা লেখো";
     $("alabel").textContent="বাংলা পরিভাষা লেখো";
@@ -265,10 +301,19 @@ function check(){
     fb.className="no show";
     fb.innerHTML='<div style="font-size:20px;font-weight:700">'+(same?"এটা তো প্রশ্নের ভুল বানানটাই, শুদ্ধ করে লিখতে হবে":"আবার দেখে নাও")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+getAns().replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">'+lbl+'</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+xs+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
   }
-  s.seen=1;D.s[id]=s;save();
+  s.seen=1;s.c=D.cy||1;D.s[id]=s;save();
   $("nx").onclick=next;
   $("check").textContent="পরের শব্দ";
 }
+function recordFlash(ok){
+  var id=Q[qi],s=D.s[id]||{b:0},first=!(id in firstTry);
+  if(first)firstTry[id]=ok;
+  if(ok){if(first)s.b=Math.min(4,(s.b||0)+1)}else{s.b=0;if(wrongList.indexOf(id)<0)wrongList.push(id)}
+  s.seen=1;s.c=D.cy||1;D[ "s"][id]=s;save();next();
+}
+$("reveal").onclick=function(){var w=W[Q[qi]];$("flashtxt").textContent=w.d||w.a[0];$("flashans").style.display="block";$("reveal").style.display="none";$("rate").style.display="flex"};
+$("fok").onclick=function(){recordFlash(true)};
+$("fno").onclick=function(){recordFlash(false)};
 function next(){
   qi++;
   if(qi>=Q.length){finish();return}
@@ -283,13 +328,14 @@ function finish(){
   if(wrongList.length){
     h='<div style="font-size:16px;font-weight:600;margin-bottom:10px">এবার যেগুলো ভুল হয়েছে</div>';
     wrongList.forEach(function(i){
-      var ans=dk==="pr"?W[i].d:W[i].a[0];
-      h+='<div class="card" style="margin-bottom:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px">'+(dk==="pr"?'<span style="font-size:18px;font-weight:600;font-family:Georgia,serif">'+W[i].w+'</span>':'<span class="bn" style="font-size:22px;color:#B42318;text-decoration:line-through">'+W[i].w+'</span>')+'<span class="bn" style="font-size:22px;color:#054F31;text-align:right">'+ans+'</span></div>';
+      var ans=(dk==="pr"||dk==="pc")?W[i].d:W[i].a[0];
+      h+='<div class="card" style="margin-bottom:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px">'+(dk==="pc"?'<span class="bn" style="font-size:20px;font-weight:600">'+W[i].w+'</span>':dk==="pr"?'<span style="font-size:18px;font-weight:600;font-family:Georgia,serif">'+W[i].w+'</span>':'<span class="bn" style="font-size:22px;color:#B42318;text-decoration:line-through">'+W[i].w+'</span>')+'<span class="bn" style="font-size:22px;color:#054F31;text-align:right">'+ans+'</span></div>';
     });
   }
   $("review").innerHTML=h;
   var r=wrongCount(dk),rb=$("retry");
   rb.textContent="ভুলগুলো আবার চেষ্টা করো ("+bn(r)+")";
+  $("again").textContent="পরের রাউন্ড ("+bn(Math.min(D.n||10,remaining(dk)))+"টা শব্দ)";
   rb.style.display=r?"block":"none";
   var st=DECKS.sp.D.st,t=new Date(),y=new Date(Date.now()-864e5);
   if(st.last!==day(t)){st.n=(st.last===day(y))?st.n+1:1;st.last=day(t)}
@@ -476,10 +522,6 @@ kbe.addEventListener("contextmenu",function(e){e.preventDefault()});
 $("entog").onclick=function(){var on=kbe.classList.toggle("en");this.classList.toggle("on",on);this.textContent="ইংরেজি হরফ: "+(on?"চালু":"বন্ধ")};
 $("hlp").onclick=function(){$("help").classList.add("on")};
 $("hclose").onclick=function(){$("help").classList.remove("on")};
-$("start").onclick=function(){startSession("sp",false)};
-$("startp").onclick=function(){startSession("pr",false)};
-$("rtsp").onclick=function(){startSession("sp",true)};
-$("rtpr").onclick=function(){startSession("pr",true)};
 $("again").onclick=function(){startSession(dk,false)};
 $("retry").onclick=function(){startSession(dk,true)};
 $("tohome").onclick=home;
