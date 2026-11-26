@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>বানান শিখি</title>
+<style>
+@font-face{font-family:"NotoBn";src:url("fonts/NotoSansBengali.ttf");font-weight:100 900}
+@font-face{font-family:"TiroBn";src:url("fonts/TiroBangla-Regular.ttf");font-weight:400}
+:root{--bg:#FBF8F3;--p:#0F766E;--ink:#1F2937;--mut:#5B6472;--line:#E3DED3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"NotoBn",sans-serif}
+button{font-family:inherit;cursor:pointer}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto;position:relative;overflow:hidden}
+.scr{display:none;flex-direction:column;height:100%}
+.scr.on{display:flex}
+.pad{padding:0 22px}
+.card{background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 2px 10px rgba(31,41,55,.07)}
+.btn{width:100%;height:54px;border:0;border-radius:16px;background:var(--p);color:#fff;font-size:18px;font-weight:600}
+.btn:active{opacity:.85}
+.chip{display:inline-block;padding:4px 12px;border-radius:999px;background:#E3F2EF;color:#0B5F58;font-size:13px;font-weight:600;margin:0 4px 4px 0}
+.chip.r{background:#FDECEA;color:#8A1F14}
+.bn{font-family:"TiroBn",serif;font-weight:400}
+.bar{height:10px;border-radius:6px;background:var(--line);flex:1}
+.bar>i{display:block;height:100%;border-radius:6px;background:var(--p);transition:width .3s}
+.tabs{margin-top:auto;height:68px;background:#fff;border-top:1px solid #ECE7DD;display:flex}
+.tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--mut);gap:2px}
+.tabs .a{color:var(--p);font-weight:600}
+#fb{position:absolute;left:0;right:0;bottom:0;padding:20px 22px calc(26px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;transform:translateY(105%);transition:transform .25s;z-index:5}
+#fb.show{transform:none}
+#fb.ok{background:#E6F6EC;color:#054F31}
+#fb.no{background:#FDECEA;color:#7A1A10}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section class="scr on" id="home">
+  <div class="pad" style="padding-top:calc(26px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:15px;color:var(--mut)">স্বাগতম</div><div style="font-size:28px;font-weight:700;line-height:1.2">বানান শিখি</div></div>
+    <div id="streak" style="background:#FDE7B0;color:#6B4A00;border-radius:999px;padding:8px 14px;font-size:15px;font-weight:700"></div>
+  </div>
+  <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:16px;overflow:auto">
+    <div style="background:var(--p);color:#fff;border-radius:24px;padding:22px 22px 20px">
+      <div style="font-size:14px;opacity:.9">আজকের অনুশীলন</div>
+      <div style="font-size:26px;font-weight:700;margin:4px 0">শুদ্ধ বানান লেখো</div>
+      <div style="font-size:15px;opacity:.92;margin-bottom:18px">১০টা শব্দ, প্রায় ৫ মিনিট</div>
+      <button class="btn" id="start" style="background:#fff;color:var(--p)">শুরু করো</button>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:16px;font-weight:600">তোমার অগ্রগতি</div><div id="pg" style="font-size:14px;color:var(--mut)"></div></div>
+      <div style="height:12px;border-radius:7px;background:var(--line);margin:12px 0"><div id="pgbar" style="height:12px;border-radius:7px;background:#F5B942;width:0"></div></div>
+      <div><span class="chip" id="cl"></span><span class="chip r" id="cr"></span></div>
+    </div>
+    <div class="card"><div style="font-size:16px;font-weight:600;margin-bottom:4px">কীভাবে কাজ করে</div>
+      <div style="font-size:15px;color:#4B5563;line-height:1.55">ভুল বানান দেখবে, শুদ্ধটা টাইপ করবে। ভুল হলে শব্দটা আবার আসবে, ঠিক হলে কিছুদিন পর আবার দেখাবে।</div></div>
+  </div>
+  <div class="tabs"><div class="a">হোম</div><div></div><div></div></div>
+</section>
+
+<section class="scr" id="quiz">
+  <div class="pad" style="padding-top:calc(18px + env(safe-area-inset-top));display:flex;align-items:center;gap:14px">
+    <button id="close" aria-label="বন্ধ করো" style="width:40px;height:40px;border:0;border-radius:12px;background:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="bar"><i id="qbar" style="width:0"></i></div>
+    <div id="qn" style="font-size:15px;font-weight:600;color:var(--mut)"></div>
+  </div>
+  <div class="pad" style="padding-top:18px;display:flex;flex-direction:column;gap:16px;overflow:auto">
+    <div style="font-size:18px;font-weight:600">ভুল বানানটি শুদ্ধ করে লেখো</div>
+    <div class="card" style="text-align:center;padding:22px 16px">
+      <div id="wrong" class="bn" style="font-size:46px;color:#B42318;line-height:1.35;word-break:break-word"></div>
+      <div id="chips" style="margin-top:10px"></div>
+    </div>
+    <div>
+      <label for="ans" style="display:block;font-size:15px;font-weight:600;margin-bottom:8px">শুদ্ধ বানান লেখো</label>
+      <input id="ans" class="bn" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:100%;height:60px;border:2px solid var(--p);border-radius:16px;padding:0 18px;font-size:26px;background:#fff;color:var(--ink)">
+    </div>
+    <button id="hint" style="align-self:flex-start;border:0;background:transparent;color:var(--p);font-size:16px;font-weight:600;min-height:44px;padding:8px 0">ইঙ্গিত দেখো</button>
+    <div id="hinttxt" style="font-size:15px;color:var(--mut);margin-top:-8px"></div>
+  </div>
+  <div class="pad" style="margin-top:auto;padding-bottom:calc(26px + env(safe-area-inset-bottom))"><button class="btn" id="check">যাচাই করো</button></div>
+  <div id="fb"></div>
+</section>
+
+<section class="scr" id="done">
+  <div class="pad" style="padding-top:calc(40px + env(safe-area-inset-top));text-align:center">
+    <div style="font-size:16px;color:var(--mut)">অনুশীলন শেষ</div>
+    <div id="score" style="font-size:56px;font-weight:700;color:var(--p);margin:8px 0"></div>
+    <div id="msg" style="font-size:18px;font-weight:600"></div>
+  </div>
+  <div class="pad" style="padding-top:20px;overflow:auto;flex:1">
+    <div id="review"></div>
+  </div>
+  <div class="pad" style="padding-bottom:calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px">
+    <button class="btn" id="again">আরও ১০টা শব্দ</button>
+    <button class="btn" id="tohome" style="background:#fff;color:var(--p);border:2px solid var(--p)">হোমে ফিরি</button>
+  </div>
+</section>
+
+</div>
+<script src="words.js"></script>
+<script>
+(function(){
+var KEY="banan_v1", W=window.WORDS, N=W.length;
+var DIG="০১২৩৪৫৬৭৮৯";
+function bn(n){return String(n).replace(/\d/g,function(d){return DIG[d]})}
+function norm(s){return String(s).normalize("NFC").replace(/[\u200c\u200d]/g,"").replace(/\s+/g," ").trim()}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{s:{},st:{n:0,last:""},tot:0}}catch(e){return {s:{},st:{n:0,last:""},tot:0}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+var D=load();
+function $(id){return document.getElementById(id)}
+function show(id){["home","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
+var cur="home";
+function day(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+
+function home(){
+  var learned=0,rev=0;
+  for(var i=0;i<N;i++){var s=D.s[i];if(s){if(s.b>=2)learned++;if(s.b===0)rev++}}
+  $("pg").textContent=bn(learned)+" / "+bn(N);
+  $("pgbar").style.width=Math.max(2,Math.round(learned/N*100))+"%";
+  $("cl").textContent=bn(learned)+" শিখেছি";
+  $("cr").textContent=bn(rev)+" আবার দেখব";
+  var t=new Date(),y=new Date(Date.now()-864e5),n=D.st.n;
+  if(D.st.last!==day(t)&&D.st.last!==day(y))n=0;
+  $("streak").textContent=bn(n)+" দিন ধারাবাহিক";
+  show("home");
+}
+
+var Q=[],qi=0,firstTry={},wrongList=[],requeued={},answered=false,hintUsed=false;
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function pick(){
+  var rev=[],nw=[],rest=[];
+  for(var i=0;i<N;i++){var s=D.s[i];if(!s)nw.push(i);else if(s.b===0)rev.push(i);else rest.push(i)}
+  rest.sort(function(a,b){return D.s[a].b-D.s[b].b});
+  var out=shuffle(rev).slice(0,4);
+  nw.slice(0,10-out.length).forEach(function(i){out.push(i)});
+  for(var k=0;out.length<10&&k<rest.length;k++)out.push(rest[k]);
+  for(var m=0;out.length<10&&m<rev.length;m++)if(out.indexOf(rev[m])<0)out.push(rev[m]);
+  return shuffle(out);
+}
+function startSession(){
+  Q=pick();qi=0;firstTry={};wrongList=[];requeued={};
+  if(!Q.length){home();return}
+  show("quiz");render();
+}
+function render(){
+  var id=Q[qi],w=W[id];answered=false;hintUsed=false;
+  $("fb").className="";$("hinttxt").textContent="";
+  $("wrong").textContent=w.w;
+  $("chips").innerHTML=w.b.map(function(b){return '<span class="chip">'+b+'</span>'}).join("");
+  $("ans").value="";$("ans").disabled=false;
+  $("check").textContent="যাচাই করো";
+  $("qn").textContent=bn(Math.min(qi+1,Q.length))+" / "+bn(Q.length);
+  $("qbar").style.width=Math.round(qi/Q.length*100)+"%";
+  setTimeout(function(){$("ans").focus()},150);
+}
+function hint(){
+  var w=W[Q[qi]],a=w.a[0];
+  var m=a.match(/^[\u0985-\u0994\u0995-\u09B9\u09DC-\u09DF][\u09BC\u09BE-\u09CC\u0981-\u0983]*(?:\u09CD[\u0995-\u09B9][\u09BE-\u09CC]*)*/);
+  var first=m?m[0]:a.charAt(0);
+  $("hinttxt").textContent="প্রথম অক্ষর: "+first;
+  hintUsed=true;
+}
+function check(){
+  if(answered){next();return}
+  var val=norm($("ans").value);
+  if(!val){$("ans").focus();return}
+  var id=Q[qi],w=W[id],ok=w.a.some(function(a){return norm(a)===val});
+  answered=true;$("ans").disabled=true;$("ans").blur();
+  var s=D.s[id]||{b:0};
+  var first=!(id in firstTry);
+  if(first)firstTry[id]=ok&&!hintUsed;
+  var fb=$("fb"),right=w.a.join(" / ");
+  if(ok){
+    if(first)s.b=Math.min(4,(s.b||0)+(hintUsed?0:1));
+    fb.className="ok show";
+    fb.innerHTML='<div style="font-size:22px;font-weight:700">চমৎকার, ঠিক হয়েছে!</div><div class="bn" style="font-size:36px;margin:8px 0 4px">'+right+'</div>'+(w.n?'<div style="font-size:15px;margin-bottom:12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#067647">পরের শব্দ</button>';
+  }else{
+    s.b=0;
+    if(wrongList.indexOf(id)<0)wrongList.push(id);
+    if(!requeued[id]){requeued[id]=1;Q.push(id)}
+    fb.className="no show";
+    fb.innerHTML='<div style="font-size:20px;font-weight:700">আবার দেখে নাও</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+$("ans").value.replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">সঠিক বানান</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
+  }
+  s.seen=1;D.s[id]=s;save();
+  $("nx").onclick=next;
+  $("check").textContent="পরের শব্দ";
+}
+function next(){
+  qi++;
+  if(qi>=Q.length){finish();return}
+  render();
+}
+function finish(){
+  var ids=Object.keys(firstTry),good=ids.filter(function(i){return firstTry[i]}).length,tot=ids.length;
+  $("score").textContent=bn(good)+" / "+bn(tot);
+  var p=tot?good/tot:0;
+  $("msg").textContent=p>=0.9?"অসাধারণ!":p>=0.6?"বেশ ভালো, চালিয়ে যাও":"চিন্তা নেই, ভুলগুলো আবার আসবে";
+  var h="";
+  if(wrongList.length){
+    h='<div style="font-size:16px;font-weight:600;margin-bottom:10px">যেগুলো আবার দেখতে হবে</div>';
+    wrongList.forEach(function(i){h+='<div class="card" style="margin-bottom:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center"><span class="bn" style="font-size:22px;color:#B42318;text-decoration:line-through">'+W[i].w+'</span><span class="bn" style="font-size:24px;color:#054F31">'+W[i].a[0]+'</span></div>'});
+  }
+  $("review").innerHTML=h;
+  var t=new Date(),y=new Date(Date.now()-864e5);
+  if(D.st.last!==day(t)){D.st.n=(D.st.last===day(y))?D.st.n+1:1;D.st.last=day(t)}
+  D.tot=(D.tot||0)+1;save();
+  show("done");
+}
+$("start").onclick=startSession;
+$("again").onclick=startSession;
+$("tohome").onclick=home;
+$("close").onclick=home;
+$("hint").onclick=hint;
+$("check").onclick=check;
+$("ans").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();check()}});
+window.appBack=function(){if(cur!=="home"){home();return true}return false};
+home();
+})();
+</script>
+</body>
+</html>
