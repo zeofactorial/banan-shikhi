@@ -159,7 +159,7 @@ button{font-family:inherit;cursor:pointer}
 var DIG="০১২৩৪৫৬৭৮৯";
 function bn(n){return String(n).replace(/\d/g,function(d){return DIG[d]})}
 function norm(s){return String(s).normalize("NFC").replace(/[‌‍]/g,"").replace(/\s+/g," ").trim()}
-function nk(s){return norm(s).replace(/[\s\-‐‑–−]/g,"")}
+function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
 var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[]}};
 DECKS.sp.D=loadK("banan_v1");DECKS.pr.D=loadK("parib_v1");
@@ -247,22 +247,23 @@ function check(){
   var val=norm(getAns());
   if(!val){return}
   var id=Q[qi],w=W[id],ok,same=false,right;
-  if(dk==="pr"){var nv=nk(val);ok=w.a.some(function(a){return nk(a)===nv});right=w.d}
+  if(dk==="pr"){var nv=nk(val);ok=w.a.concat(w.x||[]).some(function(a){return nk(a)===nv});right=w.d}
   else{ok=w.a.some(function(a){return norm(a)===val});same=w.w.split("/").some(function(x){return norm(x)===val});right=w.a.join(" / ")}
   answered=true;kbOn=false;volMode(false);
   var s=D.s[id]||{b:0};
   var first=!(id in firstTry);
   if(first)firstTry[id]=ok&&!hintUsed;
   var fb=$("fb"),lbl=dk==="pr"?"সঠিক পরিভাষা":"সঠিক বানান";
+  var xs=(dk==="pr"&&w.x&&w.x.length)?'<div style="font-size:14px;margin:4px 0 6px;opacity:.9">অন্য গ্রহণযোগ্য শব্দ: '+w.x.slice(0,5).join(", ")+'</div>':"";
   if(ok){
     if(first)s.b=Math.min(4,(s.b||0)+(hintUsed?0:1));
     fb.className="ok show";
-    fb.innerHTML='<div style="font-size:22px;font-weight:700">চমৎকার, ঠিক হয়েছে!</div><div class="bn" style="font-size:36px;margin:8px 0 4px">'+right+'</div>'+(w.n?'<div style="font-size:15px;margin-bottom:12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#067647">পরের শব্দ</button>';
+    fb.innerHTML='<div style="font-size:22px;font-weight:700">চমৎকার, ঠিক হয়েছে!</div><div class="bn" style="font-size:36px;margin:8px 0 4px">'+right+'</div>'+xs+(w.n?'<div style="font-size:15px;margin-bottom:12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#067647">পরের শব্দ</button>';
   }else{
     s.b=0;
     if(wrongList.indexOf(id)<0)wrongList.push(id);
     fb.className="no show";
-    fb.innerHTML='<div style="font-size:20px;font-weight:700">'+(same?"এটা তো প্রশ্নের ভুল বানানটাই, শুদ্ধ করে লিখতে হবে":"আবার দেখে নাও")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+getAns().replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">'+lbl+'</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
+    fb.innerHTML='<div style="font-size:20px;font-weight:700">'+(same?"এটা তো প্রশ্নের ভুল বানানটাই, শুদ্ধ করে লিখতে হবে":"আবার দেখে নাও")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">তুমি লিখেছ</div><div class="bn" style="font-size:26px;color:#B42318">'+getAns().replace(/</g,"&lt;")+'</div><div style="font-size:14px;margin-top:8px;opacity:.85">'+lbl+'</div><div class="bn" style="font-size:36px;margin-bottom:6px">'+right+'</div>'+xs+(w.n?'<div style="font-size:15px;background:#fff;border-radius:14px;padding:10px 14px;margin:6px 0 12px">'+w.n+'</div>':'<div style="height:10px"></div>')+'<button class="btn" id="nx" style="background:#B42318">বুঝেছি, পরের শব্দ</button>';
   }
   s.seen=1;D.s[id]=s;save();
   $("nx").onclick=next;
