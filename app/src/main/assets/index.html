@@ -55,9 +55,9 @@ button{font-family:inherit;cursor:pointer}
 #pop{position:fixed;display:none;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.25);padding:4px;gap:4px;z-index:20}
 #pop .po{width:46px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#F3F4F6}
 #pop .po.hv{background:var(--p);color:#fff}
-#ansbox{width:100%;min-height:60px;border:2px solid var(--p);border-radius:16px;padding:6px 18px;font-size:26px;background:#fff;color:var(--ink);display:flex;align-items:center;flex-wrap:wrap;word-break:break-word}
+#ansbox{width:100%;min-height:60px;border:2px solid var(--p);border-radius:16px;padding:9px 18px;font-size:26px;background:#fff;color:var(--ink);display:block;line-height:1.6;word-break:break-word;-webkit-user-select:none;user-select:none}
 #ansbox .ph{color:#9CA3AF;font-family:"NotoBn",sans-serif;font-size:18px}
-#ansbox .cr{display:inline-block;width:2px;height:30px;background:var(--p);margin-left:1px;animation:bl 1s steps(1) infinite}
+#ansbox .cr{display:inline-block;vertical-align:middle;width:2px;height:30px;background:var(--p);margin-left:1px;animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
 #fb{position:absolute;left:0;right:0;bottom:0;padding:20px 22px calc(26px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;transform:translateY(105%);transition:transform .25s;z-index:5}
 #fb.show{transform:none}
@@ -152,7 +152,7 @@ function load(){try{return JSON.parse(localStorage.getItem(KEY))||{s:{},st:{n:0,
 function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
 var D=load();
 function $(id){return document.getElementById(id)}
-function show(id){["home","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
+function show(id){volMode(false);["home","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
 var cur="home";
 function day(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 
@@ -191,7 +191,7 @@ function render(){
   $("fb").className="";$("hinttxt").textContent="";
   $("wrong").textContent=w.w;
   $("chips").innerHTML=w.b.map(function(b){return '<span class="chip">'+b+'</span>'}).join("");
-  typed="";roman="";drawAns();kbOn=true;
+  T="";pos=0;roman="";drawAns();kbOn=true;volMode(true);
   $("check").textContent="যাচাই করো";
   $("qn").textContent=bn(Math.min(qi+1,Q.length))+" / "+bn(Q.length);
   $("qbar").style.width=Math.round(qi/Q.length*100)+"%";
@@ -208,7 +208,7 @@ function check(){
   var val=norm(getAns());
   if(!val){return}
   var id=Q[qi],w=W[id],ok=w.a.some(function(a){return norm(a)===val}),same=w.w.split("/").some(function(x){return norm(x)===val});
-  answered=true;kbOn=false;
+  answered=true;kbOn=false;volMode(false);
   var s=D.s[id]||{b:0};
   var first=!(id in firstTry);
   if(first)firstTry[id]=ok&&!hintUsed;
@@ -251,7 +251,7 @@ function finish(){
 }
 
 /* ---------- নিজস্ব কিবোর্ড (বাংলা + ইংরেজি/অভ্র) ---------- */
-var typed="",roman="",mode="bn",kbOn=false,shift=false,HS="\u09CD";
+var T="",pos=0,roman="",mode="bn",kbOn=false,shift=false,HS="\u09CD";
 var NK="\u09BC";
 var VOW={"rri":["ঋ","ৃ"],"oi":["ঐ","ৈ"],"ou":["ঔ","ৌ"],"OI":["ঐ","ৈ"],"OU":["ঔ","ৌ"],"ii":["ঈ","ী"],"ee":["ঈ","ী"],"oo":["উ","ু"],"aa":["আ","া"],
  "a":["আ","া"],"i":["ই","ি"],"I":["ঈ","ী"],"u":["উ","ু"],"U":["ঊ","ূ"],"e":["এ","ে"],"O":["ও","ো"],"o":["অ",""]};
@@ -284,22 +284,26 @@ function convert(r){
   }
   return out;
 }
-function getAns(){return typed+convert(roman)}
+function getAns(){return T.slice(0,pos)+convert(roman)+T.slice(pos)}
 function drawAns(){
-  var b=$("ansbox"),c=convert(roman),t=typed.replace(/</g,"&lt;");
-  var body=t+(c?'<span style="border-bottom:2px dotted var(--p)">'+c.replace(/</g,"&lt;")+'</span>':"");
-  b.innerHTML=(body||'<span class="ph">কিবোর্ড দিয়ে লেখো</span>')+'<span class="cr"></span>';
+  var bx=$("ansbox"),c=convert(roman);
+  bx.textContent="";
+  if(!T&&!c){var ph=document.createElement("span");ph.className="ph";ph.textContent="কিবোর্ড দিয়ে লেখো";bx.appendChild(ph)}
+  bx.appendChild(document.createTextNode(T.slice(0,pos)));
+  if(c){var sp=document.createElement("span");sp.style.borderBottom="2px dotted var(--p)";sp.textContent=c;bx.appendChild(sp)}
+  var cr=document.createElement("span");cr.className="cr";bx.appendChild(cr);
+  bx.appendChild(document.createTextNode(T.slice(pos)));
   $("romline").textContent=roman?("ইংরেজিতে লিখেছ: "+roman):"";
 }
-function commit(){if(roman){typed+=convert(roman);roman=""}}
+function commit(){if(roman){var c=convert(roman);T=T.slice(0,pos)+c+T.slice(pos);pos+=c.length;roman=""}}
 var R1=[["দ","ধ","q"],["ূ","ঊ","w"],["ী","ঈ","e"],["র","ড়","r","ৃ"],["ট","ঠ","t"],["এ","ঐ","y"],["ু","উ","u"],["ি","ই","i"],["ও","ঔ","o"],["প","ফ","p"],["ে","ৈ","["],["ো","ৌ","]"]];
 var R2=[["া","অ","a"],["স","ষ","s"],["ড","ঢ","d"],["ত","থ","f"],["গ","ঘ","g"],["হ","ঃ","h"],["জ","ঝ","j","ঞ"],["ক","খ","k"],["ল","ং","l"]];
 var R3=[["য়","য","z"],["শ","ঢ়","x"],["চ","ছ","c"],["আ","ঋ","v"],["ব","ভ","b"],["ন","ণ","n"],["ম","ঙ","m"],["ৎ","","<"],["্","ঁ","."]];
 var E1="qwertyuiop".split(""),E2="asdfghjkl".split(""),E3="zxcvbnm".split("");
 var act=null,timer=null,popOpen=false,rep=null,shiftEl;
-function ins(ch){if(!kbOn||answered)return;commit();typed+=ch;drawAns()}
+function ins(ch){if(!kbOn||answered)return;commit();T=T.slice(0,pos)+ch+T.slice(pos);pos+=ch.length;drawAns()}
 function insR(ch){if(!kbOn||answered)return;roman+=ch;drawAns()}
-function del(){if(!kbOn||answered)return;if(roman){roman=roman.slice(0,-1)}else{var a=Array.from(typed);a.pop();typed=a.join("")}drawAns()}
+function del(){if(!kbOn||answered)return;if(roman){roman=roman.slice(0,-1)}else if(pos>0){var n=1,cc=T.charCodeAt(pos-1);if(cc>=0xDC00&&cc<=0xDFFF&&pos>1)n=2;T=T.slice(0,pos-n)+T.slice(pos);pos-=n}drawAns()}
 function opts(k){var o=[];if(k[1])o.push(k[1]);if(k[3])o.push(k[3]);return o}
 function mkKey(k){
   var d=document.createElement("div");d.className="k";d.setAttribute("role","button");
@@ -374,11 +378,43 @@ function up(e){
   else if(ty==="sym"){insR(t.__ch)}
   else if(ty==="conj"){ins(t.__ch);setShift(false)}
   else if(ty==="shift")setShift(!shift);
-  else if(ty==="space"){if(kbOn&&!answered){commit();typed+=" ";drawAns()}}
+  else if(ty==="space"){ins(" ")}
   else if(ty==="lang"){commit();mode=mode==="bn"?"en":"bn";shift=false;buildKb();drawAns()}
   else if(ty==="enter"){commit();drawAns();check()}
 }
 function cancel(){clearTimeout(timer);clearInterval(rep);rep=null;if(act)act.classList.remove("dn");act=null;hidePop()}
+var CL=/[\s\S](?:\u09CD[\u0995-\u09B9\u09DC-\u09DF]|[\u09BC\u09BE-\u09CC\u0981-\u0983\u09D7\u09E2\u09E3\u200C\u200D])*\u09CD?/g;
+function bounds(str){var b=[0],m,re=new RegExp(CL.source,"g");while((m=re.exec(str))){if(!m[0].length){re.lastIndex++;continue}b.push(m.index+m[0].length)}return b}
+function nearest(b,off){var best=0,d=1e9;for(var k=0;k<b.length;k++){var x=Math.abs(b[k]-off);if(x<d){d=x;best=b[k]}}return best}
+function volMode(on){try{if(window.Android&&window.Android.setVol)window.Android.setVol(!!on)}catch(e){}}
+window.moveCaret=function(d){
+  if(!kbOn||answered)return;
+  commit();
+  var b=bounds(T),i=0;
+  for(var k=0;k<b.length;k++){if(b[k]<=pos)i=k}
+  var j;
+  if(b[i]<pos){j=d>0?Math.min(b.length-1,i+1):i}else{j=Math.max(0,Math.min(b.length-1,i+d))}
+  pos=b[j];drawAns();
+};
+$("ansbox").addEventListener("pointerup",function(e){
+  if(!kbOn||answered)return;
+  var off=-1;
+  if(document.caretRangeFromPoint){
+    var r=document.caretRangeFromPoint(e.clientX,e.clientY);
+    if(r){
+      var acc=0,nodes=$("ansbox").childNodes;
+      for(var n=0;n<nodes.length;n++){
+        var nd=nodes[n];
+        if(nd.nodeType===1&&(nd.className==="ph"||nd.className==="cr"))continue;
+        if(nd===r.startContainer||nd.contains(r.startContainer)){off=acc+r.startOffset;break}
+        acc+=nd.textContent.length;
+      }
+    }
+  }
+  commit();
+  pos=off<0?T.length:nearest(bounds(T),Math.min(off,T.length));
+  drawAns();
+});
 buildKb();
 var kbe=$("kb");
 kbe.addEventListener("pointerdown",down);
