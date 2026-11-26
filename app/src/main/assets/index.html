@@ -296,9 +296,9 @@ function drawAns(){
   $("romline").textContent=roman?("ইংরেজিতে লিখেছ: "+roman):"";
 }
 function commit(){if(roman){var c=convert(roman);T=T.slice(0,pos)+c+T.slice(pos);pos+=c.length;roman=""}}
-var R1=[["দ","ধ","q"],["ূ","ঊ","w"],["ী","ঈ","e"],["র","ড়","r","ৃ"],["ট","ঠ","t"],["এ","ঐ","y"],["ু","উ","u"],["ি","ই","i"],["ও","ঔ","o"],["প","ফ","p"],["ে","ৈ","["],["ো","ৌ","]"]];
+var R1=[["দ","ধ","q"],["ূ","ঊ","w"],["ী","ঈ","e"],["র","ড়","r"],["ট","ঠ","t"],["এ","ঐ","y"],["ু","উ","u"],["ি","ই","i"],["ও","ঔ","o"],["প","ফ","p"],["ে","ৈ","["],["ো","ৌ","]"]];
 var R2=[["া","অ","a"],["স","ষ","s"],["ড","ঢ","d"],["ত","থ","f"],["গ","ঘ","g"],["হ","ঃ","h"],["জ","ঝ","j","ঞ"],["ক","খ","k"],["ল","ং","l"]];
-var R3=[["য়","য","z"],["শ","ঢ়","x"],["চ","ছ","c"],["আ","ঋ","v"],["ব","ভ","b"],["ন","ণ","n"],["ম","ঙ","m"],["ৎ","","<"],["্","ঁ","."]];
+var R3=[["য়","য","z"],["শ","ঢ়","x"],["চ","ছ","c"],["আ","ঋ","v","ৃ"],["ব","ভ","b"],["ন","ণ","n"],["ম","ঙ","m"],["ৎ","","<"],["্","ঁ","."]];
 var E1="qwertyuiop".split(""),E2="asdfghjkl".split(""),E3="zxcvbnm".split("");
 var act=null,timer=null,popOpen=false,rep=null,shiftEl;
 function ins(ch){if(!kbOn||answered)return;commit();T=T.slice(0,pos)+ch+T.slice(pos);pos+=ch.length;drawAns()}
@@ -351,23 +351,26 @@ function showPop(el,k){
   popOpen=true;return true;
 }
 function hidePop(){$("pop").style.display="none";popOpen=false}
+var acts={};
+function clr(a){clearTimeout(a.timer);clearInterval(a.rep);a.t.classList.remove("dn")}
 function down(e){
   var t=e.target.closest&&e.target.closest(".k");
   if(!t||t.classList.contains("half"))return;
-  e.preventDefault();act=t;t.classList.add("dn");
-  if(t.__t==="key"){timer=setTimeout(function(){showPop(t,t.__k)},380)}
-  if(t.__t==="back"){del();timer=setTimeout(function(){rep=setInterval(del,70)},420)}
+  e.preventDefault();
+  var a={t:t,timer:null,rep:null,pop:false};acts[e.pointerId]=a;t.classList.add("dn");
+  if(t.__t==="key"){a.timer=setTimeout(function(){if(showPop(t,t.__k))a.pop=true},380)}
+  if(t.__t==="back"){del();a.timer=setTimeout(function(){a.rep=setInterval(del,70)},420)}
 }
 function move(e){
-  if(!popOpen)return;
+  var a=acts[e.pointerId];if(!a||!a.pop)return;
   var el=document.elementFromPoint(e.clientX,e.clientY),po=el&&el.closest?el.closest(".po"):null;
   Array.prototype.forEach.call($("pop").children,function(c){c.classList.toggle("hv",c===po)});
 }
 function up(e){
-  clearTimeout(timer);clearInterval(rep);rep=null;
-  if(!act)return;
-  var t=act;act=null;t.classList.remove("dn");
-  if(popOpen){
+  var a=acts[e.pointerId];if(!a)return;
+  delete acts[e.pointerId];clr(a);
+  var t=a.t;
+  if(a.pop){
     var el=document.elementFromPoint(e.clientX,e.clientY),po=el&&el.closest?el.closest(".po"):null;
     if(po)ins(po.textContent);
     hidePop();setShift(false);return;
@@ -378,11 +381,11 @@ function up(e){
   else if(ty==="sym"){insR(t.__ch)}
   else if(ty==="conj"){ins(t.__ch);setShift(false)}
   else if(ty==="shift")setShift(!shift);
-  else if(ty==="space"){ins(" ")}
+  else if(ty==="space")ins(" ");
   else if(ty==="lang"){commit();mode=mode==="bn"?"en":"bn";shift=false;buildKb();drawAns()}
   else if(ty==="enter"){commit();drawAns();check()}
 }
-function cancel(){clearTimeout(timer);clearInterval(rep);rep=null;if(act)act.classList.remove("dn");act=null;hidePop()}
+function cancel(e){var a=acts[e.pointerId];if(!a)return;delete acts[e.pointerId];clr(a);if(a.pop)hidePop()}
 var CL=/[\s\S](?:\u09CD[\u0995-\u09B9\u09DC-\u09DF]|[\u09BC\u09BE-\u09CC\u0981-\u0983\u09D7\u09E2\u09E3\u200C\u200D])*\u09CD?/g;
 function bounds(str){var b=[0],m,re=new RegExp(CL.source,"g");while((m=re.exec(str))){if(!m[0].length){re.lastIndex++;continue}b.push(m.index+m[0].length)}return b}
 function nearest(b,off){var best=0,d=1e9;for(var k=0;k<b.length;k++){var x=Math.abs(b[k]-off);if(x<d){d=x;best=b[k]}}return best}
