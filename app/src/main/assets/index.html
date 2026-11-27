@@ -63,6 +63,8 @@ button{font-family:inherit;cursor:pointer}
 #fb.show{transform:none}
 #fb.ok{background:#E6F6EC;color:#054F31}
 #fb.no{background:#FDECEA;color:#7A1A10}
+#gptabs{display:none;gap:6px}.gt,#laytog{border:0;background:#fff;color:#374151;font-size:13px;font-weight:600;border-radius:999px;padding:7px 13px;box-shadow:0 1px 0 #B8BEC6}.gt.on{background:var(--p);color:#fff}
+.k.g{height:46px;font-size:22px}.k.g.sm{font-size:17px}.k.g.sp2{font-size:13px;background:#F3F4F6}
 #quiz.flash #kb,#quiz.flash #ansgrp,#quiz.flash #hint,#quiz.flash #hinttxt,#quiz.flash #checkwrap,#quiz.flash #chips{display:none!important}
 #flashwrap{display:none}#quiz.flash #flashwrap{display:block}
 .pb{min-width:40px;height:36px;border:0;border-radius:10px;background:#fff;font-weight:700;font-size:15px;padding:0 8px}
@@ -110,7 +112,7 @@ button{font-family:inherit;cursor:pointer}
     <button class="btn" id="reveal" style="height:54px">উচ্চারণ দেখো</button>
     <div id="rate" style="display:none;gap:12px"><button class="btn" id="fno" style="background:#B42318;flex:1">ভুল হয়েছিল</button><button class="btn" id="fok" style="background:#067647;flex:1">ঠিক বলেছিলাম</button></div>
   </div>
-  <div id="kb"><div id="kbtop"><button id="hlp" style="visibility:hidden">? লেখার নিয়ম</button><button id="entog">ইংরেজি হরফ: বন্ধ</button></div><div id="rows"></div></div>
+  <div id="kb"><div id="kbtop"><button id="hlp" style="display:none">? লেখার নিয়ম</button><div id="gptabs"></div><button id="laytog"></button><button id="entog" style="display:none">ইংরেজি হরফ: বন্ধ</button></div><div id="rows"></div></div>
   <div id="pop"></div>
   <div id="help"><div class="box"><div style="font-size:18px;font-weight:700;margin-bottom:8px">ইংরেজি কিবোর্ডে বাংলা লেখার নিয়ম</div>
   স্বরবর্ণ: অ=<b>o</b> আ=<b>a</b> ই=<b>i</b> ঈ=<b>I</b> উ=<b>u</b> ঊ=<b>U</b> ঋ=<b>rri</b> এ=<b>e</b> ঐ=<b>oi</b> ও=<b>O</b> ঔ=<b>ou</b><br>
@@ -148,11 +150,13 @@ button{font-family:inherit;cursor:pointer}
 var DIG="০১২৩৪৫৬৭৮৯";
 function bn(n){return String(n).replace(/\d/g,function(d){return DIG[d]})}
 function norm(s){return String(s).normalize("NFC").replace(/[‌‍]/g,"").replace(/\s+/g," ").trim()}
+function nz(s){return nk(s).replace(/[\u09CD\u200C\u200D]/g,"")}
 function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
 var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[],shuf:1},pc:{key:"uccharon_v1",W:window.PRON||[],shuf:1}};
 for(var kk in DECKS)DECKS[kk].D=loadK(DECKS[kk].key);
 var dk="sp",W,N,D,isRetry=false;
+function isFlash(){return dk==="pc"&&(D.m||"flash")==="flash"}
 function setDeck(k){dk=k;W=DECKS[k].W;N=W.length;D=DECKS[k].D}
 function saveDeck(k){try{localStorage.setItem(DECKS[k].key,JSON.stringify(DECKS[k].D))}catch(e){}}
 function save(){saveDeck(dk)}
@@ -184,6 +188,7 @@ function homeDecks(){
      +'<div style="background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:14px">'
      +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap"><span>প্রতিবার কয়টা শব্দ</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="n" data-v="-5">−৫</button><button class="pb" '+bt+' data-a="n" data-v="-1">−</button><b style="min-width:30px;text-align:center;font-size:18px">'+bn(size)+'</b><button class="pb" '+bt+' data-a="n" data-v="1">+</button><button class="pb" '+bt+' data-a="n" data-v="5">+৫</button></span></div>'
      +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>দিনে একবার করলে শেষ হবে</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="d" data-v="-1">−</button><b style="min-width:54px;text-align:center;font-size:18px">'+bn(days)+' দিনে</b><button class="pb" '+bt+' data-a="d" data-v="1">+</button></span></div>'
+     +(k==="pc"?'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>অনুশীলনের ধরন</span><span style="display:flex;gap:6px">'+[["flash","ফ্ল্যাশকার্ড"],["type","লিখে"]].map(function(x){var on=(d.D.m||"flash")===x[0];return '<button class="pb" data-k="pc" data-a="m" data-v="'+x[0]+'" style="'+(on?'color:'+m.c:'background:rgba(255,255,255,.3);color:#fff')+'">'+x[1]+'</button>'}).join("")+'</span></div>':"")
      +'</div></div>';
   });
   $("decks").innerHTML=h;
@@ -200,6 +205,7 @@ $("decks").onclick=function(e){
   var k=b.dataset.k,a=b.dataset.a,v=+b.dataset.v;setDeck(k);
   if(a==="go"){startSession(k,false)}
   else if(a==="rt"){startSession(k,true)}
+  else if(a==="m"){D.m=b.dataset.v;save();home()}
   else if(a==="n"){D.n=clamp((D.n||10)+v,1,60);save();home()}
   else if(a==="d"){var rem=remaining(k),T=clamp(Math.ceil(rem/(D.n||10))+v,1,rem);D.n=clamp(Math.ceil(rem/T),1,60);save();home()}
 };
@@ -243,8 +249,8 @@ function startSession(k,retry){
 function render(){
   var id=Q[qi],w=W[id],we=$("wrong");answered=false;hintUsed=false;
   $("fb").className="";$("hinttxt").textContent="";
-  $("quiz").classList.toggle("flash",dk==="pc");
-  if(dk==="pc"){
+  $("quiz").classList.toggle("flash",isFlash());
+  if(isFlash()){
     $("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের উচ্চারণ কী হবে?";
     we.className="bn";we.style.cssText="font-size:44px;font-weight:600;color:#1F2937;line-height:1.35;word-break:break-word";
     we.textContent=w.w;
@@ -254,7 +260,7 @@ function render(){
     $("qbar").style.width=Math.round(qi/Q.length*100)+"%";
     return;
   }
-  if(dk==="pr"){
+  if(dk==="pr"||dk==="pc"){
     $("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের বাংলা পরিভাষা লেখো";
     $("alabel").textContent="বাংলা পরিভাষা লেখো";
     we.className="";we.style.cssText="font-size:36px;font-weight:700;color:#1F2937;line-height:1.35;word-break:break-word;font-family:Georgia,'Times New Roman',serif";
@@ -266,6 +272,7 @@ function render(){
     $("chips").innerHTML=w.b.map(function(b){return '<span class="chip">'+b+'</span>'}).join("");
   }
   we.textContent=w.w;
+  if(dk==="pc"){$("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের উচ্চারণ লেখো";$("alabel").textContent="উচ্চারণ লেখো";we.className="bn";we.style.cssText="font-size:44px;font-weight:600;color:#1F2937;line-height:1.35;word-break:break-word"}
   T="";pos=0;roman="";drawAns();kbOn=true;volMode(true);
   $("check").textContent="যাচাই করো";
   $("qn").textContent=bn(Math.min(qi+1,Q.length))+" / "+bn(Q.length);
@@ -283,13 +290,13 @@ function check(){
   var val=norm(getAns());
   if(!val){return}
   var id=Q[qi],w=W[id],ok,same=false,right;
-  if(dk==="pr"){var nv=nk(val);ok=w.a.concat(w.x||[]).some(function(a){return nk(a)===nv});right=w.d}
+  if(dk==="pr"||dk==="pc"){var nf=dk==="pc"?nz:nk,nv=nf(val);ok=w.a.concat(w.x||[]).some(function(a){return nf(a)===nv});right=w.d}
   else{ok=w.a.some(function(a){return norm(a)===val});same=w.w.split("/").some(function(x){return norm(x)===val});right=w.a.join(" / ")}
   answered=true;kbOn=false;volMode(false);
   var s=D.s[id]||{b:0};
   var first=!(id in firstTry);
   if(first)firstTry[id]=ok&&!hintUsed;
-  var fb=$("fb"),lbl=dk==="pr"?"সঠিক পরিভাষা":"সঠিক বানান";
+  var fb=$("fb"),lbl=dk==="pr"?"সঠিক পরিভাষা":dk==="pc"?"সঠিক উচ্চারণ":"সঠিক বানান";
   var xs=(dk==="pr"&&w.x&&w.x.length)?'<div style="font-size:14px;margin:4px 0 6px;opacity:.9">অন্য গ্রহণযোগ্য শব্দ: '+w.x.slice(0,5).join(", ")+'</div>':"";
   if(ok){
     if(first)s.b=Math.min(4,(s.b||0)+(hintUsed?0:1));
@@ -344,7 +351,7 @@ function finish(){
 }
 
 /* ---------- নিজস্ব কিবোর্ড (বাংলা + ইংরেজি/অভ্র) ---------- */
-var T="",pos=0,roman="",mode="bn",kbOn=false,shift=false,HS="\u09CD";
+var T="",pos=0,roman="",base=(function(){try{return localStorage.getItem("kbl")==="bn"?"bn":"gp"}catch(e){return"gp"}})(),mode=base,gpPage=0,kbOn=false,shift=false,HS="\u09CD";
 var NK="\u09BC";
 var VOW={"rri":["ঋ","ৃ"],"oi":["ঐ","ৈ"],"ou":["ঔ","ৌ"],"OI":["ঐ","ৈ"],"OU":["ঔ","ৌ"],"ii":["ঈ","ী"],"ee":["ঈ","ী"],"oo":["উ","ু"],"aa":["আ","া"],
  "a":["আ","া"],"i":["ই","ি"],"I":["ঈ","ী"],"u":["উ","ু"],"U":["ঊ","ূ"],"e":["এ","ে"],"O":["ও","ো"],"o":["অ",""]};
@@ -415,8 +422,44 @@ function row(keys,pre,post){
   if(post){var h2=document.createElement("div");h2.className="k half";r.appendChild(h2)}
   $("rows").appendChild(r);
 }
+var GP=[
+ [["ক","খ","গ","ঘ","ঙ","চ","ছ","জ"],["ঝ","ঞ","ট","ঠ","ড","ঢ","ণ","ত"],["থ","দ","ধ","ন","প","ফ","ব","ভ"],["ম","য","র","ল","শ","ষ","স","হ"],["ড়","ঢ়","য়","ৎ","ং","ঃ","ঁ","্"]],
+ [["অ","আ","ই","ঈ","উ","ঊ","ঋ","এ"],["ঐ","ও","ঔ","ং","ঃ","ঁ","ৎ","্"],["া","ি","ী","ু","ূ","ৃ","ে","ৈ"],["ো","ৌ","র্","্র","্য","ক্ষ","জ্ঞ","্"]]
+];
+var CP=[["ক","ক"],["ক","ত"],["ক","ষ"],["গ","ধ"],["ঙ","গ"],["ঙ","ক"],["চ","চ"],["জ","জ"],["ঞ","চ"],["ন","ত"],["ন","দ"],["ন","ধ"],["ন","ন"],["ম","প"],["ম","ব"],["ম","ম"],["ল","ল"],["শ","ব"],["স","ত"],["স","ব"],["ষ","ট"],["ত","র"],["ত","ত"],["দ","ব"]];
+var GPN=["ব্যঞ্জন","স্বর ও কার","যুক্ত ও চিহ্ন"];
+function initGp(){
+  var g=$("gptabs");g.innerHTML="";
+  GPN.forEach(function(n,i){var b=document.createElement("button");b.className="gt";b.textContent=n;b.onclick=function(){gpPage=i;buildKb()};b.addEventListener("pointerdown",function(e){e.stopPropagation()});g.appendChild(b)});
+  $("laytog").addEventListener("pointerdown",function(e){e.stopPropagation()});
+  $("laytog").onclick=function(){commit();base=base==="gp"?"bn":"gp";try{localStorage.setItem("kbl",base)}catch(e){}mode=base;shift=false;buildKb();drawAns()};
+}
+function mkG(label,str,cls){var d=document.createElement("div");d.className="k g"+(cls?" "+cls:"");d.textContent=label;d.__t="conj";d.__ch=str===undefined?label:str;d.setAttribute("role","button");return d}
+function gpRows(){
+  var rows;
+  if(gpPage<2)rows=GP[gpPage].map(function(r){return r.map(function(c){var sm=c.length>1;var lbl=(c==="্")?"◌্":(c==="র্"?"র্":c);return mkG(lbl,c,sm?"sm":"")})});
+  else{
+    rows=[];
+    for(var i=0;i<3;i++)rows.push(CP.slice(i*8,i*8+8).map(function(p){return mkG(p[0]+HS+p[1],p[0]+HS+p[1],"sm")}));
+    rows.push([mkG("বিচ্ছেদ","\u200C","sp2"),mkG("-"),mkG("।"),mkG(","),mkG("?"),mkG("("),mkG(")"),mkG("!")]);
+  }
+  rows.forEach(function(r){row(r)});
+}
+function buildGp(){
+  var back=mkSp("⌫","sp","back"),lang=mkSp("ইংরেজি","lang","lang");
+  gpRows();
+  row([lang,mkSp("স্পেস","space","space"),back,mkSp("যাচাই","ent","enter")]);
+  $("rows").lastChild.style.marginBottom="0";
+  Array.prototype.forEach.call($("gptabs").children,function(b,i){b.classList.toggle("on",i===gpPage)});
+}
 function buildKb(){
   $("rows").innerHTML="";
+  $("gptabs").style.display=mode==="gp"?"flex":"none";
+  $("laytog").style.display=mode==="en"?"none":"inline-block";
+  $("laytog").textContent=mode==="gp"?"পুরনো কিবোর্ড":"বর্ণমালা কিবোর্ড";
+  $("hlp").style.display=mode==="en"?"inline-block":"none";
+  $("entog").style.display=mode==="bn"?"inline-block":"none";
+  if(mode==="gp"){buildGp();return}
   shiftEl=mkSp(mode==="bn"?"বিকল্প":"⇧","sp","shift");if(mode==="bn")shiftEl.style.fontSize="13px";shiftEl.classList.toggle("on",shift);
   var back=mkSp("⌫","sp","back");
   var lang=mkSp(mode==="bn"?"ইংরেজি":"বাংলা","lang","lang");
@@ -430,8 +473,6 @@ function buildKb(){
     row([lang,mkSym("`"),mkSym(":"),mkSp("স্পেস","space","space"),mkSym("^"),mkSym("."),mkSp("যাচাই","ent","enter")]);
   }
   $("rows").lastChild.style.marginBottom="0";
-  $("hlp").style.visibility=mode==="en"?"visible":"hidden";
-  $("entog").style.visibility=mode==="bn"?"visible":"hidden";
 }
 function setShift(v){shift=v;buildKb()}
 function showPop(el,k){
@@ -475,7 +516,7 @@ function up(e){
   else if(ty==="conj"){ins(t.__ch);setShift(false)}
   else if(ty==="shift")setShift(!shift);
   else if(ty==="space")ins(" ");
-  else if(ty==="lang"){commit();mode=mode==="bn"?"en":"bn";shift=false;buildKb();drawAns()}
+  else if(ty==="lang"){commit();mode=mode==="en"?base:"en";shift=false;buildKb();drawAns()}
   else if(ty==="enter"){commit();drawAns();check()}
 }
 function cancel(e){var a=acts[e.pointerId];if(!a)return;delete acts[e.pointerId];clr(a);if(a.pop)hidePop()}
@@ -511,7 +552,7 @@ $("ansbox").addEventListener("pointerup",function(e){
   pos=off<0?T.length:nearest(bounds(T),Math.min(off,T.length));
   drawAns();
 });
-buildKb();
+initGp();buildKb();
 var kbe=$("kb");
 kbe.addEventListener("pointerdown",down);
 kbe.addEventListener("pointermove",move);
