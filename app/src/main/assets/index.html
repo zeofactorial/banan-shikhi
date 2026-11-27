@@ -7,7 +7,11 @@
 <style>
 @font-face{font-family:"NotoBn";src:url("fonts/NotoSansBengali.ttf");font-weight:100 900}
 @font-face{font-family:"TiroBn";src:url("fonts/TiroBangla-Regular.ttf");font-weight:400}
-:root{--bg:#FBF8F3;--p:#0F766E;--ink:#1F2937;--mut:#5B6472;--line:#E3DED3}
+html{color-scheme:light dark}
+:root{--bg:#FBF8F3;--card:#fff;--p:#0F766E;--ink:#1F2937;--mut:#5B6472;--line:#E3DED3;--tabbg:#fff;--tabline:#ECE7DD;--shadow:rgba(31,41,55,.07)}
+:root[data-theme="dark"]{--bg:#15191C;--card:#1E2528;--ink:#EDEFF1;--mut:#9AA3AC;--line:#2A3135;--tabbg:#1E2528;--tabline:#2A3135;--shadow:rgba(0,0,0,.35)}
+:root[data-theme="amoled"]{--bg:#000;--card:#0B0D0E;--ink:#F2F3F4;--mut:#8C949C;--line:#1C1F21;--tabbg:#000;--tabline:#1C1F21;--shadow:rgba(0,0,0,.6)}
+@media (prefers-color-scheme: dark){:root:not([data-theme]){--bg:#15191C;--card:#1E2528;--ink:#EDEFF1;--mut:#9AA3AC;--line:#2A3135;--tabbg:#1E2528;--tabline:#2A3135;--shadow:rgba(0,0,0,.35)}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"NotoBn",sans-serif}
 button{font-family:inherit;cursor:pointer}
@@ -15,7 +19,7 @@ button{font-family:inherit;cursor:pointer}
 .scr{display:none;flex-direction:column;height:100%}
 .scr.on{display:flex}
 .pad{padding:0 22px}
-.card{background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 2px 10px rgba(31,41,55,.07)}
+.card{background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:0 2px 10px var(--shadow)}
 .btn{width:100%;height:54px;border:0;border-radius:16px;background:var(--p);color:#fff;font-size:18px;font-weight:600}
 .btn:active{opacity:.85}
 .chip{display:inline-block;padding:4px 12px;border-radius:999px;background:#E3F2EF;color:#0B5F58;font-size:13px;font-weight:600;margin:0 4px 4px 0}
@@ -23,25 +27,25 @@ button{font-family:inherit;cursor:pointer}
 .bn{font-family:"TiroBn",serif;font-weight:400}
 .bar{height:10px;border-radius:6px;background:var(--line);flex:1}
 .bar>i{display:block;height:100%;border-radius:6px;background:var(--p);transition:width .3s}
-.tabs{margin-top:auto;height:68px;background:#fff;border-top:1px solid #ECE7DD;display:flex}
+.tabs{margin-top:auto;height:64px;background:var(--tabbg);border-top:1px solid var(--tabline);display:flex}
 .tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--mut);gap:2px}
 .tabs .a{color:var(--p);font-weight:600}
-#kb{background:#E5E7EB;padding:8px 4px calc(8px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none;touch-action:none}
+#kb{background:var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none;touch-action:none}
 #kbtop{display:flex;justify-content:space-between;align-items:center;padding:0 6px 6px;min-height:32px}
-#entog{border:0;background:#fff;color:#374151;font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 #B8BEC6}
-#hlp{border:0;background:#fff;color:#374151;font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 #B8BEC6}
+#entog{border:0;background:var(--card);color:var(--mut);font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 var(--line)}
+#hlp{border:0;background:var(--card);color:var(--mut);font-size:12px;font-weight:600;border-radius:999px;padding:6px 12px;box-shadow:0 1px 0 var(--line)}
 #romline{min-height:20px;font-size:14px;color:var(--mut);margin-top:6px;font-family:sans-serif}
 .k.lang{background:#CBD0D6;flex:1.45;font-size:13px;font-weight:700}
-.k.cj{flex:1;flex-direction:column;font-size:19px;line-height:1;background:#F3F4F6}
+.k.cj{flex:1;flex-direction:column;font-size:19px;line-height:1;background:var(--line)}
 .k.cj small{font-size:9px;color:#6B7280;margin-top:3px;font-family:NotoBn,sans-serif}
 .k.q{flex:1}
 #help{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;z-index:30;align-items:center;justify-content:center;padding:18px}
 #help.on{display:flex}
-#help .box{background:#fff;border-radius:20px;padding:20px;max-width:420px;max-height:84%;overflow:auto;font-size:15px;line-height:1.7}
+#help .box{background:var(--card);color:var(--ink);border-radius:20px;padding:20px;max-width:420px;max-height:84%;overflow:auto;font-size:15px;line-height:1.7}
 #help b{font-family:sans-serif;color:var(--p)}
 #entog.on{background:var(--p);color:#fff}
 .kr{display:flex;gap:4px;margin-bottom:8px;justify-content:center}
-.k{position:relative;flex:1;min-width:0;height:50px;border-radius:8px;background:#fff;box-shadow:0 1px 0 #B8BEC6;display:flex;align-items:center;justify-content:center;font-size:23px;color:#111827;touch-action:none;-webkit-user-select:none;user-select:none}
+.k{position:relative;flex:1;min-width:0;height:50px;border-radius:8px;background:var(--card);box-shadow:0 1px 0 var(--line);display:flex;align-items:center;justify-content:center;font-size:23px;color:var(--ink);touch-action:none;-webkit-user-select:none;user-select:none}
 .k.dn{background:#D1D5DB}
 .k.sp{background:#CBD0D6;flex:1.45;font-size:15px;font-weight:600}
 .k.sp.on{background:var(--p);color:#fff}
@@ -52,10 +56,10 @@ button{font-family:inherit;cursor:pointer}
 .k .en{display:none;position:absolute;top:3px;left:4px;font-size:10px;color:#0F766E;font-family:sans-serif;font-weight:700;line-height:1;text-transform:uppercase}
 #kb.en .en{display:block}
 .k.half{flex:.5;visibility:hidden;box-shadow:none;background:transparent}
-#pop{position:fixed;display:none;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.25);padding:4px;gap:4px;z-index:20}
-#pop .po{width:46px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#F3F4F6}
+#pop{position:fixed;display:none;background:var(--card);border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.25);padding:4px;gap:4px;z-index:20}
+#pop .po{width:46px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--line);color:var(--ink)}
 #pop .po.hv{background:var(--p);color:#fff}
-#ansbox{width:100%;min-height:60px;border:2px solid var(--p);border-radius:16px;padding:9px 18px;font-size:26px;background:#fff;color:var(--ink);display:block;line-height:1.6;word-break:break-word;-webkit-user-select:none;user-select:none}
+#ansbox{width:100%;min-height:60px;border:2px solid var(--p);border-radius:16px;padding:9px 18px;font-size:26px;background:var(--card);color:var(--ink);display:block;line-height:1.6;word-break:break-word;-webkit-user-select:none;user-select:none}
 #ansbox .ph{color:#9CA3AF;font-family:"NotoBn",sans-serif;font-size:18px}
 #ansbox .cr{display:inline-block;vertical-align:middle;width:2px;height:30px;background:var(--p);margin-left:1px;animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
@@ -63,11 +67,13 @@ button{font-family:inherit;cursor:pointer}
 #fb.show{transform:none}
 #fb.ok{background:#E6F6EC;color:#054F31}
 #fb.no{background:#FDECEA;color:#7A1A10}
-#gptabs{display:none;gap:6px}.gt,#laytog{border:0;background:#fff;color:#374151;font-size:13px;font-weight:600;border-radius:999px;padding:7px 13px;box-shadow:0 1px 0 #B8BEC6}.gt.on{background:var(--p);color:#fff}
-.k.g{height:46px;font-size:22px}.k.g.sm{font-size:17px}.k.g.sp2{font-size:13px;background:#F3F4F6}
+#gptabs{display:none;gap:6px}.gt,#laytog{border:0;background:var(--card);color:var(--mut);font-size:13px;font-weight:600;border-radius:999px;padding:7px 13px;box-shadow:0 1px 0 var(--line)}.gt.on{background:var(--p);color:#fff}
+.k.g{height:46px;font-size:22px}.k.g.sm{font-size:17px}.k.g.sp2{font-size:13px;background:var(--line)}
 #quiz.flash #kb,#quiz.flash #ansgrp,#quiz.flash #hint,#quiz.flash #hinttxt,#quiz.flash #checkwrap,#quiz.flash #chips{display:none!important}
 #flashwrap{display:none}#quiz.flash #flashwrap{display:block}
 .pb{min-width:40px;height:36px;border:0;border-radius:10px;background:#fff;font-weight:700;font-size:15px;padding:0 8px}
+.row-btn{width:100%;border:0;background:transparent;color:var(--ink);font-size:16px;text-align:left;padding:16px 20px;font-family:inherit}.row-btn:active{background:var(--line)}
+.thm{flex:1;min-width:70px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:12px 6px;font-size:13px;font-weight:600;text-align:center}.thm.on{border-color:var(--p);color:var(--p)}
 </style>
 </head>
 <body>
@@ -78,12 +84,42 @@ button{font-family:inherit;cursor:pointer}
     <div style="min-width:0"><div style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:25px;font-weight:800;line-height:1.15;letter-spacing:-.3px;white-space:nowrap">Bangla Booster</div><div style="font-size:14px;color:var(--mut);line-height:1.4;margin-top:4px">এইচএসসি বাংলা ২য় পত্র: ব্যাকরণ প্রস্তুতি</div></div>
     <div id="streak" style="background:#FDE7B0;color:#6B4A00;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:none;margin-left:10px"></div>
   </div>
-  <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:16px;overflow:auto">
-    <div id="decks" style="display:flex;flex-direction:column;gap:16px"></div>
-    <div class="card"><div style="font-size:16px;font-weight:600;margin-bottom:4px">কীভাবে কাজ করে</div>
-      <div style="font-size:15px;color:#4B5563;line-height:1.55">সব শব্দ একবার শেষ না হওয়া পর্যন্ত কোনো শব্দ আবার আসে না। ভুল হওয়া শব্দ পরের রাউন্ডে একবার করে ফিরে আসে। চাইলে "ভুল শব্দ আবার চেষ্টা" বাটন থেকে সঙ্গে সঙ্গেও চেষ্টা করা যায়। প্রতিবার কয়টা শব্দ, বা কত দিনে শেষ করতে চাও, তা নিজে ঠিক করে নিতে পারো।</div></div>
+  <div class="pad" style="padding-top:18px;display:flex;flex-direction:column;gap:12px;overflow:auto">
+    <div id="decks" style="display:flex;flex-direction:column;gap:12px"></div>
   </div>
-  <div class="tabs"><div class="a">হোম</div><div></div><div></div></div>
+  <div class="tabs"><div class="a" id="tabhome">হোম</div><div id="tabset">সেটিংস</div></div>
+</section>
+
+<section class="scr" id="topic">
+  <div class="pad" style="padding-top:calc(18px + env(safe-area-inset-top));display:flex;align-items:center;gap:14px">
+    <button id="topback" style="width:40px;height:40px;border:0;border-radius:12px;background:var(--card);font-size:20px;color:var(--ink)">←</button>
+    <div id="toptitle" style="font-size:19px;font-weight:700"></div>
+  </div>
+  <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:16px;overflow:auto">
+    <div id="topicbody"></div>
+    <div class="card"><div style="font-size:16px;font-weight:600;margin-bottom:4px">কীভাবে কাজ করে</div>
+      <div style="font-size:15px;color:var(--mut);line-height:1.55">সব শব্দ একবার শেষ না হওয়া পর্যন্ত কোনো শব্দ আবার আসে না। ভুল হওয়া শব্দ পরের রাউন্ডে একবার করে ফিরে আসে। চাইলে "ভুল শব্দ আবার চেষ্টা" বাটন থেকে সঙ্গে সঙ্গেও চেষ্টা করা যায়।</div></div>
+  </div>
+  <div class="tabs"><div></div><div></div></div>
+</section>
+
+<section class="scr" id="settings">
+  <div class="pad" style="padding-top:calc(26px + env(safe-area-inset-top))">
+    <div style="font-size:22px;font-weight:700;margin-bottom:18px">সেটিংস</div>
+  </div>
+  <div class="pad" style="display:flex;flex-direction:column;gap:14px;overflow:auto">
+    <div class="card">
+      <div style="font-size:15px;font-weight:600;margin-bottom:12px">থিম</div>
+      <div id="themerow" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <button class="row-btn" id="btnshare">বন্ধুদের সাথে অ্যাপ শেয়ার করো</button>
+      <div style="height:1px;background:var(--line)"></div>
+      <button class="row-btn" id="btnmail">ডেভেলপারকে ইমেইল করো</button>
+    </div>
+    <div style="text-align:center;color:var(--mut);font-size:13px;padding:10px 0">Bangla Booster • বিল্ড ২৭ নভেম্বর, দুপুর ২টা</div>
+  </div>
+  <div class="tabs"><div id="tabhome2">হোম</div><div class="a" id="tabset2">সেটিংস</div></div>
 </section>
 
 <section class="scr" id="quiz">
@@ -153,6 +189,7 @@ function norm(s){return String(s).normalize("NFC").replace(/[‌‍]/g,"").repla
 function nz(s){return nk(s).replace(/[\u09CD\u200C\u200D]/g,"")}
 function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
+var DEV_EMAIL="your-email@example.com";
 var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[],shuf:1},pc:{key:"uccharon_v1",W:window.PRON||[],shuf:1}};
 for(var kk in DECKS)DECKS[kk].D=loadK(DECKS[kk].key);
 var dk="sp",W,N,D,isRetry=false;
@@ -162,7 +199,7 @@ function saveDeck(k){try{localStorage.setItem(DECKS[k].key,JSON.stringify(DECKS[
 function save(){saveDeck(dk)}
 setDeck("sp");
 function $(id){return document.getElementById(id)}
-function show(id){volMode(false);["home","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
+function show(id){volMode(false);["home","topic","settings","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
 var cur="home";
 function day(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function wrongCount(k){var d=DECKS[k],c=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(s&&s.b===0)c++}return c}
@@ -170,45 +207,81 @@ function wrongCount(k){var d=DECKS[k],c=0;for(var i=0;i<d.W.length;i++){var s=d.
 var META={sp:{t:"শুদ্ধ বানান লেখো",s:"ভুল বানান দেখে শুদ্ধ বানান লেখো",c:"#0F766E"},pr:{t:"পরিভাষা শেখো",s:"ইংরেজি শব্দ দেখে বাংলা পরিভাষা লেখো",c:"#1E3A5F"},pc:{t:"শব্দের উচ্চারণ",s:"শব্দ দেখে উচ্চারণ ভাবো, তারপর মিলিয়ে নাও",c:"#7A2E1D"}};
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function remaining(k){var d=DECKS[k],cy=d.D.cy||1,r=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(!s||s.c!==cy||s.b===0)r++}return r||d.W.length}
-function homeDecks(){
+function homeList(){
   var h="";
   ["sp","pr","pc"].forEach(function(k){
     var d=DECKS[k],n=d.W.length;if(!n)return;
     var m=META[k],cy=d.D.cy||1,seen=0;
     for(var i=0;i<n;i++){var s=d.D.s[i];if(s&&s.c===cy)seen++}
-    var size=d.D.n||10,rem=remaining(k),days=Math.ceil(rem/size),r=wrongCount(k);
-    var bt='data-k="'+k+'" style="color:'+m.c+'"';
-    h+='<div style="background:'+m.c+';color:#fff;border-radius:24px;padding:20px 20px 18px">'
-     +'<div style="font-size:24px;font-weight:700">'+m.t+'</div>'
-     +'<div style="font-size:15px;opacity:.92;margin:2px 0 12px">'+m.s+'</div>'
-     +'<div style="height:8px;border-radius:5px;background:rgba(255,255,255,.28);margin-bottom:6px"><div style="height:8px;border-radius:5px;background:#fff;width:'+Math.max(2,Math.round(seen/n*100))+'%"></div></div>'
-     +'<div style="font-size:14px;opacity:.95;margin-bottom:12px">মোট '+bn(n)+'টা শব্দ • এ চক্রে দেখা হয়েছে '+bn(seen)+' • বাকি '+bn(rem)+'</div>'
-     +'<button class="btn" data-k="'+k+'" data-a="go" style="background:#fff;color:'+m.c+'">শুরু করো ('+bn(Math.min(size,rem))+'টা শব্দ)</button>'
-     +(r?'<button class="btn" data-k="'+k+'" data-a="rt" style="margin-top:10px;height:46px;font-size:16px;background:transparent;color:#fff;border:2px solid #fff">ভুল শব্দ আবার চেষ্টা করো ('+bn(r)+')</button>':'')
-     +'<div style="background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:14px">'
-     +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap"><span>প্রতিবার কয়টা শব্দ</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="n" data-v="-5">−৫</button><button class="pb" '+bt+' data-a="n" data-v="-1">−</button><b style="min-width:30px;text-align:center;font-size:18px">'+bn(size)+'</b><button class="pb" '+bt+' data-a="n" data-v="1">+</button><button class="pb" '+bt+' data-a="n" data-v="5">+৫</button></span></div>'
-     +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>দিনে একবার করলে শেষ হবে</span><span style="display:flex;align-items:center;gap:6px"><button class="pb" '+bt+' data-a="d" data-v="-1">−</button><b style="min-width:54px;text-align:center;font-size:18px">'+bn(days)+' দিনে</b><button class="pb" '+bt+' data-a="d" data-v="1">+</button></span></div>'
-     +(k==="pc"?'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>অনুশীলনের ধরন</span><span style="display:flex;gap:6px">'+[["flash","ফ্ল্যাশকার্ড"],["type","লিখে"]].map(function(x){var on=(d.D.m||"flash")===x[0];return '<button class="pb" data-k="pc" data-a="m" data-v="'+x[0]+'" style="'+(on?'color:'+m.c:'background:rgba(255,255,255,.3);color:#fff')+'">'+x[1]+'</button>'}).join("")+'</span></div>':"")
-     +'</div></div>';
+    var pct=Math.max(2,Math.round(seen/n*100));
+    h+='<button class="card" data-k="'+k+'" style="text-align:left;border:0;display:flex;align-items:center;gap:14px;width:100%">'
+     +'<div style="width:46px;height:46px;border-radius:13px;background:'+m.c+';flex:none"></div>'
+     +'<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:700">'+m.t+'</div>'
+     +'<div style="font-size:13px;color:var(--mut);margin-top:2px">'+bn(seen)+' / '+bn(n)+' শেখা হয়েছে</div>'
+     +'<div class="bar" style="height:7px;margin-top:8px"><i style="width:'+pct+'%;background:'+m.c+'"></i></div></div>'
+     +'<div style="font-size:22px;color:var(--mut)">›</div></button>';
   });
   $("decks").innerHTML=h;
 }
+var curTopic=null;
+function renderTopic(k){
+  curTopic=k;setDeck(k);
+  var d=DECKS[k],n=d.W.length,m=META[k],cy=d.D.cy||1,seen=0;
+  for(var i=0;i<n;i++){var s=d.D.s[i];if(s&&s.c===cy)seen++}
+  var size=d.D.n||10,rem=remaining(k),days=Math.ceil(rem/size),r=wrongCount(k);
+  $("toptitle").textContent=m.t;
+  var bt='data-k="'+k+'" style="color:'+m.c+'"';
+  var h='<div style="background:'+m.c+';color:#fff;border-radius:24px;padding:20px 20px 18px">'
+   +'<div style="font-size:15px;opacity:.92;margin-bottom:12px">'+m.s+'</div>'
+   +'<div style="height:8px;border-radius:5px;background:rgba(255,255,255,.28);margin-bottom:6px"><div style="height:8px;border-radius:5px;background:#fff;width:'+Math.max(2,Math.round(seen/n*100))+'%"></div></div>'
+   +'<div style="font-size:14px;opacity:.95;margin-bottom:12px">মোট '+bn(n)+'টা শব্দ • এ চক্রে দেখা হয়েছে '+bn(seen)+' • বাকি '+bn(rem)+'</div>'
+   +'<button class="btn" data-k="'+k+'" data-a="go" style="background:#fff;color:'+m.c+'">শুরু করো ('+bn(Math.min(size,rem))+'টা শব্দ)</button>'
+   +(r?'<button class="btn" data-k="'+k+'" data-a="rt" style="margin-top:10px;height:46px;font-size:16px;background:transparent;color:#fff;border:2px solid #fff">ভুল শব্দ আবার চেষ্টা করো ('+bn(r)+')</button>':'')
+   +(k==="pc"?'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:14px;flex-wrap:wrap"><span style="font-size:14px">অনুশীলনের ধরন</span><span style="display:flex;gap:6px">'+[["flash","ফ্ল্যাশকার্ড"],["type","লিখে"]].map(function(x){var on=(d.D.m||"flash")===x[0];return '<button class="pb" data-k="pc" data-a="m" data-v="'+x[0]+'" style="'+(on?'color:'+m.c:'background:rgba(255,255,255,.3);color:#fff')+'">'+x[1]+'</button>'}).join("")+'</span></div>':"")
+   +'<div style="background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:14px">'
+   +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap"><span>প্রতিবার কয়টা শব্দ</span><span style="display:flex;align-items:center;gap:10px"><button class="pb" '+bt+' data-a="n" data-v="-1">−</button><b style="min-width:30px;text-align:center;font-size:18px">'+bn(size)+'</b><button class="pb" '+bt+' data-a="n" data-v="1">+</button></span></div>'
+   +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;flex-wrap:wrap"><span>দিনে একবার করলে শেষ হবে</span><span style="display:flex;align-items:center;gap:10px"><button class="pb" '+bt+' data-a="d" data-v="-1">−</button><b style="min-width:54px;text-align:center;font-size:18px">'+bn(days)+' দিনে</b><button class="pb" '+bt+' data-a="d" data-v="1">+</button></span></div>'
+   +'</div></div>';
+  $("topicbody").innerHTML=h;
+}
 function home(){
-  homeDecks();
+  homeList();
   var t=new Date(),y=new Date(Date.now()-864e5),st=DECKS.sp.D.st,n=st.n;
   if(st.last!==day(t)&&st.last!==day(y))n=0;
   $("streak").textContent=bn(n)+" দিন ধারাবাহিক";
   show("home");
 }
-$("decks").onclick=function(e){
+$("decks").onclick=function(e){var b=e.target.closest("button[data-k]");if(!b)return;renderTopic(b.dataset.k);show("topic")};
+$("topback").onclick=home;
+$("topicbody").onclick=function(e){
   var b=e.target.closest("button");if(!b||!b.dataset.k)return;
   var k=b.dataset.k,a=b.dataset.a,v=+b.dataset.v;setDeck(k);
   if(a==="go"){startSession(k,false)}
   else if(a==="rt"){startSession(k,true)}
-  else if(a==="m"){D.m=b.dataset.v;save();home()}
-  else if(a==="n"){D.n=clamp((D.n||10)+v,1,60);save();home()}
-  else if(a==="d"){var rem=remaining(k),T=clamp(Math.ceil(rem/(D.n||10))+v,1,rem);D.n=clamp(Math.ceil(rem/T),1,60);save();home()}
+  else if(a==="m"){D.m=b.dataset.v;save();renderTopic(k)}
+  else if(a==="n"){D.n=clamp((D.n||10)+v,1,60);save();renderTopic(k)}
+  else if(a==="d"){var rem=remaining(k),T=clamp(Math.ceil(rem/(D.n||10))+v,1,rem);D.n=clamp(Math.ceil(rem/T),1,60);save();renderTopic(k)}
 };
+$("tabhome").onclick=home;$("tabhome2").onclick=home;
+$("tabset").onclick=openSettings;$("tabset2").onclick=openSettings;
+var THEMES=[["system","সিস্টেম"],["light","লাইট"],["dark","ডার্ক"],["amoled","AMOLED"]];
+function applyTheme(){var t="system";try{t=localStorage.getItem("theme")||"system"}catch(e){}
+  if(t==="system")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);
+  return t;
+}
+function openSettings(){
+  var cur=applyTheme();
+  $("themerow").innerHTML=THEMES.map(function(x){return '<button class="thm'+(x[0]===cur?' on':'')+'" data-t="'+x[0]+'">'+x[1]+'</button>'}).join("");
+  show("settings");
+}
+$("themerow").onclick=function(e){var b=e.target.closest("button");if(!b)return;try{localStorage.setItem("theme",b.dataset.t)}catch(err){}applyTheme();openSettings()};
+$("btnshare").onclick=function(){
+  var text="আমি Bangla Booster অ্যাপ দিয়ে এইচএসসি বাংলা ২য় পত্রের ব্যাকরণ অনুশীলন করছি। তুমিও চেষ্টা করে দেখতে পারো।";
+  if(navigator.share){navigator.share({text:text}).catch(function(){})}
+  else{try{navigator.clipboard.writeText(text)}catch(e){}alert("কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো")}
+};
+$("btnmail").onclick=function(){location.href="mailto:"+DEV_EMAIL+"?subject="+encodeURIComponent("Bangla Booster")};
+applyTheme();
 
 var Q=[],qi=0,firstTry={},wrongList=[],answered=false,hintUsed=false;
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
@@ -250,6 +323,7 @@ function render(){
   var id=Q[qi],w=W[id],we=$("wrong");answered=false;hintUsed=false;
   $("fb").className="";$("hinttxt").textContent="";
   $("quiz").classList.toggle("flash",isFlash());
+  $("flashans").style.display="none";$("rate").style.display="none";
   if(isFlash()){
     $("qlabel").textContent=(isRetry?"আবার চেষ্টা: ":"")+"এই শব্দের উচ্চারণ কী হবে?";
     we.className="bn";we.style.cssText="font-size:44px;font-weight:600;color:#1F2937;line-height:1.35;word-break:break-word";
