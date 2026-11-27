@@ -1,6 +1,10 @@
 package com.rakib.banan;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
@@ -15,6 +19,35 @@ public class MainActivity extends Activity {
     public class Bridge {
         @JavascriptInterface
         public void setVol(boolean on) { volCaret = on; }
+
+        @JavascriptInterface
+        public void share(final String text) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_TEXT, text);
+                    startActivity(Intent.createChooser(i, "শেয়ার করো"));
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void mail(final String to) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + to));
+                        i.putExtra(Intent.EXTRA_SUBJECT, "Bangla Booster");
+                        startActivity(Intent.createChooser(i, "ইমেইল পাঠাও"));
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(MainActivity.this, "ইমেইল অ্যাপ পাওয়া যায়নি: " + to, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
 
     @Override
