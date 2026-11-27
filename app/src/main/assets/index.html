@@ -29,11 +29,19 @@ button{font-family:inherit;cursor:pointer}
 .bar>i{display:block;height:100%;border-radius:6px;background:var(--p);transition:width .3s}
 .tabs{margin-top:auto;height:64px;background:var(--tabbg);border-top:1px solid var(--tabline);display:flex}
 .tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--mut);gap:2px}
-.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:var(--mut);font-size:12px;font-family:inherit;font-weight:600;height:100%}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:var(--mut);font-size:12px;font-family:inherit;font-weight:600;height:100%;padding:6px 0}
+.tb svg{padding:5px 14px;border-radius:999px;box-sizing:content-box;transition:background .15s}
 .tb.on{color:var(--p)}
+.tb.on svg{background:color-mix(in srgb,var(--p) 16%,transparent)}
 .hdrbtn{width:44px;height:44px;border:0;border-radius:14px;background:var(--card);color:var(--ink);box-shadow:0 1px 4px var(--shadow);display:flex;align-items:center;justify-content:center;flex:none}
-.sqico{width:46px;height:46px;border-radius:14px;color:#fff;flex:none;display:flex;align-items:center;justify-content:center}
-.sec{font-size:15px;font-weight:700;color:var(--ink);margin:6px 2px 0}
+.sqico{width:46px;height:46px;border-radius:14px;color:#fff;flex:none;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12),0 3px 8px rgba(0,0,0,.14);position:relative;overflow:hidden}
+.sqico:after{content:"";position:absolute;inset:0;background:linear-gradient(155deg,rgba(255,255,255,.3),transparent 55%)}
+.sqico svg{position:relative}
+.sec{display:flex;align-items:center;gap:8px}
+.sec .dot{width:7px;height:7px;border-radius:50%;background:var(--p)}
+.card.pop{box-shadow:0 6px 18px var(--shadow);transition:transform .1s}
+.card.pop:active{transform:scale(.985)}
+.sec{font-size:16px;font-weight:700;color:var(--ink);margin:8px 2px 2px}
 .thm2{min-width:0;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:12px 4px;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px}
 .thm2.on{border-color:var(--p);color:var(--p)}
 .rowico{display:flex;align-items:center;gap:14px;width:100%}
@@ -99,7 +107,9 @@ button{font-family:inherit;cursor:pointer}
     <button class="hdrbtn" id="bellbtn"></button>
   </div>
   <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:14px;overflow:auto">
-    <div class="card" id="quoteCard" style="background:linear-gradient(135deg,var(--p),#0B4A44);color:#fff;padding:16px 18px">
+    <div class="card" id="quoteCard" style="background:linear-gradient(135deg,var(--p),#0B4A44);color:#fff;padding:16px 18px;position:relative;overflow:hidden">
+      <svg width="150" height="150" viewBox="0 0 150 150" style="position:absolute;right:-30px;bottom:-34px;opacity:.16" fill="none" stroke="#fff" stroke-width="2"><circle cx="110" cy="40" r="46"/><circle cx="60" cy="120" r="30"/></svg>
+      <div id="quoteico" style="position:absolute;right:14px;bottom:10px;opacity:.85;color:#fff"></div>
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px"><span id="streak" style="background:rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;white-space:nowrap"></span></div>
       <div id="quoteTxt" style="font-size:15px;line-height:1.6"></div>
     </div>
@@ -318,18 +328,22 @@ function openSettings(){
   show("settings");
 }
 $("themerow").onclick=function(e){var b=e.target.closest("button");if(!b)return;try{localStorage.setItem("theme",b.dataset.t)}catch(err){}applyTheme();openSettings()};
-function copyFallback(text){
+function copyFallback(text,msg){
   var ok=false;
-  try{var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.top="-1000px";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand("copy");document.body.removeChild(ta)}catch(e){ok=false}
+  try{
+    var ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");
+    ta.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:.01";
+    document.body.appendChild(ta);ta.focus();ta.setSelectionRange(0,text.length);
+    ok=document.execCommand("copy");document.body.removeChild(ta);
+  }catch(e){ok=false}
   if(!ok){try{navigator.clipboard.writeText(text);ok=true}catch(e){}}
-  toast(ok?"কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো":"কপি করা যায়নি, একটু পরে আবার চেষ্টা করো");
+  toast(ok?msg:"কপি করা যায়নি, আবার চেষ্টা করো");
 }
 $("btnshare").onclick=function(){
   var text="আমি Bangla Booster অ্যাপ দিয়ে এইচএসসি বাংলা ২য় পত্রের ব্যাকরণ অনুশীলন করছি। তুমিও চেষ্টা করে দেখতে পারো।";
-  if(navigator.share){navigator.share({text:text}).catch(function(){copyFallback(text)})}
-  else{copyFallback(text)}
+  copyFallback(text,"লেখাটা কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো");
 };
-$("btnmail").onclick=function(){location.href="mailto:"+DEV_EMAIL+"?subject="+encodeURIComponent("Bangla Booster")};
+$("btnmail").onclick=function(){copyFallback(DEV_EMAIL,"ইমেইল কপি হয়েছে: "+DEV_EMAIL+" — মেইল অ্যাপে গিয়ে পেস্ট করে পাঠাও")};
 applyTheme();
 
 var Q=[],qi=0,firstTry={},wrongList=[],answered=false,hintUsed=false;
