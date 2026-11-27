@@ -29,6 +29,17 @@ button{font-family:inherit;cursor:pointer}
 .bar>i{display:block;height:100%;border-radius:6px;background:var(--p);transition:width .3s}
 .tabs{margin-top:auto;height:64px;background:var(--tabbg);border-top:1px solid var(--tabline);display:flex}
 .tabs div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--mut);gap:2px}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:var(--mut);font-size:12px;font-family:inherit;font-weight:600;height:100%}
+.tb.on{color:var(--p)}
+.hdrbtn{width:44px;height:44px;border:0;border-radius:14px;background:var(--card);color:var(--ink);box-shadow:0 1px 4px var(--shadow);display:flex;align-items:center;justify-content:center;flex:none}
+.sqico{width:46px;height:46px;border-radius:14px;color:#fff;flex:none;display:flex;align-items:center;justify-content:center}
+.sec{font-size:15px;font-weight:700;color:var(--ink);margin:6px 2px 0}
+.thm2{min-width:0;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:12px 4px;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px}
+.thm2.on{border-color:var(--p);color:var(--p)}
+.rowico{display:flex;align-items:center;gap:14px;width:100%}
+.rowico .ri{width:38px;height:38px;border-radius:11px;background:var(--line);color:var(--p);display:flex;align-items:center;justify-content:center;flex:none}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:14px;z-index:60;opacity:0;pointer-events:none;transition:opacity .25s;max-width:85%;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#toast.on{opacity:1}
 .tabs .a{color:var(--p);font-weight:600}
 #kb{background:var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none;touch-action:none}
 #kbtop{display:flex;justify-content:space-between;align-items:center;padding:0 6px 6px;min-height:32px}
@@ -80,14 +91,22 @@ button{font-family:inherit;cursor:pointer}
 <div id="app">
 
 <section class="scr on" id="home">
-  <div class="pad" style="padding-top:calc(26px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center">
-    <div style="min-width:0"><div style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:25px;font-weight:800;line-height:1.15;letter-spacing:-.3px;white-space:nowrap">Bangla Booster</div><div style="font-size:14px;color:var(--mut);line-height:1.4;margin-top:4px">এইচএসসি বাংলা ২য় পত্র: ব্যাকরণ প্রস্তুতি</div></div>
-    <div id="streak" style="background:#FDE7B0;color:#6B4A00;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;white-space:nowrap;flex:none;margin-left:10px"></div>
+  <div class="pad" style="padding-top:calc(22px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;gap:12px;min-width:0">
+      <div class="sqico" id="logoico" style="background:var(--p)"></div>
+      <div style="min-width:0"><div style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:21px;font-weight:800;line-height:1.2;letter-spacing:-.2px;white-space:nowrap">Bangla Booster</div><div style="font-size:13px;color:var(--mut);line-height:1.35;margin-top:2px">এইচএসসি বাংলা ২য় পত্র: ব্যাকরণ প্রস্তুতি</div></div>
+    </div>
+    <button class="hdrbtn" id="bellbtn"></button>
   </div>
-  <div class="pad" style="padding-top:18px;display:flex;flex-direction:column;gap:12px;overflow:auto">
+  <div class="pad" style="padding-top:16px;display:flex;flex-direction:column;gap:14px;overflow:auto">
+    <div class="card" id="quoteCard" style="background:linear-gradient(135deg,var(--p),#0B4A44);color:#fff;padding:16px 18px">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px"><span id="streak" style="background:rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;white-space:nowrap"></span></div>
+      <div id="quoteTxt" style="font-size:15px;line-height:1.6"></div>
+    </div>
+    <div class="sec">অনুশীলন</div>
     <div id="decks" style="display:flex;flex-direction:column;gap:12px"></div>
   </div>
-  <div class="tabs"><div class="a" id="tabhome">হোম</div><div id="tabset">সেটিংস</div></div>
+  <div class="tabs"><button class="tb on" id="tabhome"></button><button class="tb" id="tabset"></button></div>
 </section>
 
 <section class="scr" id="topic">
@@ -110,16 +129,17 @@ button{font-family:inherit;cursor:pointer}
   <div class="pad" style="display:flex;flex-direction:column;gap:14px;overflow:auto">
     <div class="card">
       <div style="font-size:15px;font-weight:600;margin-bottom:12px">থিম</div>
-      <div id="themerow" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div id="themerow" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
-      <button class="row-btn" id="btnshare">বন্ধুদের সাথে অ্যাপ শেয়ার করো</button>
+      <button class="row-btn" id="btnshare"><span class="rowico"><span class="ri" id="shareico"></span>বন্ধুদের সাথে অ্যাপ শেয়ার করো</span></button>
       <div style="height:1px;background:var(--line)"></div>
-      <button class="row-btn" id="btnmail">ডেভেলপারকে ইমেইল করো</button>
+      <button class="row-btn" id="btnmail"><span class="rowico"><span class="ri" id="mailico"></span>ডেভেলপারকে ইমেইল করো</span></button>
     </div>
-    <div style="text-align:center;color:var(--mut);font-size:13px;padding:10px 0">Bangla Booster • বিল্ড ২৭ নভেম্বর, দুপুর ২টা</div>
+    <div style="text-align:center;padding:14px 0 4px" id="footico"></div>
+    <div style="text-align:center;color:var(--mut);font-size:13px">Bangla Booster</div>
   </div>
-  <div class="tabs"><div id="tabhome2">হোম</div><div class="a" id="tabset2">সেটিংস</div></div>
+  <div class="tabs"><button class="tb" id="tabhome2"></button><button class="tb on" id="tabset2"></button></div>
 </section>
 
 <section class="scr" id="quiz">
@@ -189,7 +209,7 @@ function norm(s){return String(s).normalize("NFC").replace(/[‌‍]/g,"").repla
 function nz(s){return nk(s).replace(/[\u09CD\u200C\u200D]/g,"")}
 function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
-var DEV_EMAIL="your-email@example.com";
+var DEV_EMAIL="rajonayed@gmail.com";
 var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[],shuf:1},pc:{key:"uccharon_v1",W:window.PRON||[],shuf:1}};
 for(var kk in DECKS)DECKS[kk].D=loadK(DECKS[kk].key);
 var dk="sp",W,N,D,isRetry=false;
@@ -199,12 +219,29 @@ function saveDeck(k){try{localStorage.setItem(DECKS[k].key,JSON.stringify(DECKS[
 function save(){saveDeck(dk)}
 setDeck("sp");
 function $(id){return document.getElementById(id)}
+function ic(n){var P='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',M={
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M4 12a8 8 0 1116 0 8 8 0 01-16 0z" stroke-dasharray="2 2.4"/>',
+ bell:'<path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ moon:'<path d="M20 14.5A8 8 0 1110 4a6.5 6.5 0 0010 10.5z"/>',
+ palette:'<path d="M12 2a10 10 0 100 20c1.2 0 2-1 2-2a2 2 0 012-2h1a3 3 0 003-3c0-7-3.6-13-8-13z"/><circle cx="7.5" cy="10.5" r="1.1" fill="currentColor"/><circle cx="12" cy="7" r="1.1" fill="currentColor"/><circle cx="16" cy="10" r="1.1" fill="currentColor"/>',
+ gem:'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M8 3l4 18M16 3l-4 18"/>',
+ pencil:'<path d="M3 21l3.3-1 11-11-2.3-2.3-11 11z"/><path d="M14 4.7L17.3 8"/>',
+ book:'<path d="M4 4.5h7a3 3 0 013 3v12a2 2 0 00-2-2H4z"/><path d="M20 4.5h-7a3 3 0 00-3 3v12a2 2 0 012-2h8z"/>',
+ mega:'<path d="M3 11v2a2 2 0 002 2h1l3 5V6l-3 5H5a2 2 0 00-2 2z"/><path d="M14 8a4 4 0 010 8"/>',
+ share:'<circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+ back:'<path d="M15 5l-7 7 7 7"/>'
+};return P+(M[n]||'')+'</svg>'}
+function toast(msg){var t=$("toast");if(!t){t=document.createElement("div");t.id="toast";document.body.appendChild(t)}t.textContent=msg;t.classList.add("on");clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove("on")},1900)}
 function show(id){volMode(false);["home","topic","settings","quiz","done"].forEach(function(x){$(x).classList.toggle("on",x===id)});cur=id}
 var cur="home";
 function day(d){return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function wrongCount(k){var d=DECKS[k],c=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(s&&s.b===0)c++}return c}
 
-var META={sp:{t:"শুদ্ধ বানান লেখো",s:"ভুল বানান দেখে শুদ্ধ বানান লেখো",c:"#0F766E"},pr:{t:"পরিভাষা শেখো",s:"ইংরেজি শব্দ দেখে বাংলা পরিভাষা লেখো",c:"#1E3A5F"},pc:{t:"শব্দের উচ্চারণ",s:"শব্দ দেখে উচ্চারণ ভাবো, তারপর মিলিয়ে নাও",c:"#7A2E1D"}};
+var META={sp:{t:"শুদ্ধ বানান লেখো",s:"ভুল বানান দেখে শুদ্ধ বানান লেখো",c:"#0F766E",i:"pencil"},pr:{t:"পরিভাষা শেখো",s:"ইংরেজি শব্দ দেখে বাংলা পরিভাষা লেখো",c:"#1E3A5F",i:"book"},pc:{t:"শব্দের উচ্চারণ",s:"শব্দ দেখে উচ্চারণ ভাবো, তারপর মিলিয়ে নাও",c:"#7A2E1D",i:"mega"}};
+var QUOTES=["ভালোভাবে প্রস্তুতি নাও, সাফল্য তোমার হবেই!","প্রতিদিনের একটু চেষ্টাই পরীক্ষার দিনে কাজে লাগে।","আজকের ১০ মিনিট অনুশীলন কালকের ভুল কমাবে।","যে শব্দ আজ শিখলে, সেটা আর কখনো ভুলবে না।","ধারাবাহিকতাই সবচেয়ে বড় প্রস্তুতি।"];
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function remaining(k){var d=DECKS[k],cy=d.D.cy||1,r=0;for(var i=0;i<d.W.length;i++){var s=d.D.s[i];if(!s||s.c!==cy||s.b===0)r++}return r||d.W.length}
 function homeList(){
@@ -215,7 +252,7 @@ function homeList(){
     for(var i=0;i<n;i++){var s=d.D.s[i];if(s&&s.c===cy)seen++}
     var pct=Math.max(2,Math.round(seen/n*100));
     h+='<button class="card" data-k="'+k+'" style="text-align:left;border:0;display:flex;align-items:center;gap:14px;width:100%">'
-     +'<div style="width:46px;height:46px;border-radius:13px;background:'+m.c+';flex:none"></div>'
+     +'<div class="sqico" style="background:'+m.c+'">'+ic(m.i)+'</div>'
      +'<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:700">'+m.t+'</div>'
      +'<div style="font-size:13px;color:var(--mut);margin-top:2px">'+bn(seen)+' / '+bn(n)+' শেখা হয়েছে</div>'
      +'<div class="bar" style="height:7px;margin-top:8px"><i style="width:'+pct+'%;background:'+m.c+'"></i></div></div>'
@@ -249,6 +286,7 @@ function home(){
   var t=new Date(),y=new Date(Date.now()-864e5),st=DECKS.sp.D.st,n=st.n;
   if(st.last!==day(t)&&st.last!==day(y))n=0;
   $("streak").textContent=bn(n)+" দিন ধারাবাহিক";
+  $("quoteTxt").textContent=QUOTES[t.getDate()%QUOTES.length];
   show("home");
 }
 $("decks").onclick=function(e){var b=e.target.closest("button[data-k]");if(!b)return;renderTopic(b.dataset.k);show("topic")};
@@ -264,21 +302,32 @@ $("topicbody").onclick=function(e){
 };
 $("tabhome").onclick=home;$("tabhome2").onclick=home;
 $("tabset").onclick=openSettings;$("tabset2").onclick=openSettings;
-var THEMES=[["system","সিস্টেম"],["light","লাইট"],["dark","ডার্ক"],["amoled","AMOLED"]];
+var THEMES=[["system","সিস্টেম","sun"],["light","লাইট","sun"],["dark","ডার্ক","moon"],["amoled","AMOLED","gem"]];
 function applyTheme(){var t="system";try{t=localStorage.getItem("theme")||"system"}catch(e){}
   if(t==="system")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",t);
   return t;
 }
+$("logoico").innerHTML=ic("book");$("bellbtn").innerHTML=ic("bell");
+$("bellbtn").onclick=function(){toast("শীঘ্রই নোটিফিকেশন আসছে")};
+$("tabhome").innerHTML=ic("home")+"<span>হোম</span>";$("tabset").innerHTML=ic("gear")+"<span>সেটিংস</span>";
+$("tabhome2").innerHTML=ic("home")+"<span>হোম</span>";$("tabset2").innerHTML=ic("gear")+"<span>সেটিংস</span>";
+$("shareico").innerHTML=ic("share");$("mailico").innerHTML=ic("mail");$("footico").innerHTML=ic("book");
 function openSettings(){
   var cur=applyTheme();
-  $("themerow").innerHTML=THEMES.map(function(x){return '<button class="thm'+(x[0]===cur?' on':'')+'" data-t="'+x[0]+'">'+x[1]+'</button>'}).join("");
+  $("themerow").innerHTML=THEMES.map(function(x){return '<button class="thm2'+(x[0]===cur?' on':'')+'" data-t="'+x[0]+'">'+ic(x[2])+'<span>'+x[1]+'</span></button>'}).join("");
   show("settings");
 }
 $("themerow").onclick=function(e){var b=e.target.closest("button");if(!b)return;try{localStorage.setItem("theme",b.dataset.t)}catch(err){}applyTheme();openSettings()};
+function copyFallback(text){
+  var ok=false;
+  try{var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.top="-1000px";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand("copy");document.body.removeChild(ta)}catch(e){ok=false}
+  if(!ok){try{navigator.clipboard.writeText(text);ok=true}catch(e){}}
+  toast(ok?"কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো":"কপি করা যায়নি, একটু পরে আবার চেষ্টা করো");
+}
 $("btnshare").onclick=function(){
   var text="আমি Bangla Booster অ্যাপ দিয়ে এইচএসসি বাংলা ২য় পত্রের ব্যাকরণ অনুশীলন করছি। তুমিও চেষ্টা করে দেখতে পারো।";
-  if(navigator.share){navigator.share({text:text}).catch(function(){})}
-  else{try{navigator.clipboard.writeText(text)}catch(e){}alert("কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো")}
+  if(navigator.share){navigator.share({text:text}).catch(function(){copyFallback(text)})}
+  else{copyFallback(text)}
 };
 $("btnmail").onclick=function(){location.href="mailto:"+DEV_EMAIL+"?subject="+encodeURIComponent("Bangla Booster")};
 applyTheme();
