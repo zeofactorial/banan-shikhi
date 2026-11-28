@@ -25,10 +25,19 @@ public class MainActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("text/plain");
-                    i.putExtra(Intent.EXTRA_TEXT, text);
-                    startActivity(Intent.createChooser(i, "শেয়ার করো"));
+                    try {
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("application/vnd.android.package-archive");
+                        i.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://com.rakib.banan.apk/BanglaBooster.apk"));
+                        i.putExtra(Intent.EXTRA_TEXT, text);
+                        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(Intent.createChooser(i, "অ্যাপ শেয়ার করো"));
+                    } catch (Exception e) {
+                        Intent t = new Intent(Intent.ACTION_SEND);
+                        t.setType("text/plain");
+                        t.putExtra(Intent.EXTRA_TEXT, text);
+                        startActivity(Intent.createChooser(t, "শেয়ার করো"));
+                    }
                 }
             });
         }
