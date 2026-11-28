@@ -58,9 +58,9 @@ button{font-family:inherit;cursor:pointer}
 .k.cj{flex:1;flex-direction:column;font-size:19px;line-height:1;background:var(--line)}
 .k.cj small{font-size:9px;color:#6B7280;margin-top:3px;font-family:NotoBn,sans-serif}
 .k.q{flex:1}
-#help{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;z-index:30;align-items:center;justify-content:center;padding:18px}
-#help.on{display:flex}
-#help .box{background:var(--card);color:var(--ink);border-radius:20px;padding:20px;max-width:420px;max-height:84%;overflow:auto;font-size:15px;line-height:1.7}
+#help,#about{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;z-index:30;align-items:center;justify-content:center;padding:18px}
+#help.on,#about.on{display:flex}
+#help .box,#about .box{background:var(--card);color:var(--ink);border-radius:20px;padding:20px;max-width:420px;max-height:84%;overflow:auto;font-size:15px;line-height:1.7}
 #help b{font-family:sans-serif;color:var(--p)}
 #entog.on{background:var(--p);color:#fff}
 .kr{display:flex;gap:4px;margin-bottom:8px;justify-content:center}
@@ -160,7 +160,7 @@ body{background:radial-gradient(110% 55% at 100% 0%,var(--blob1),transparent 62%
 #fb{border-radius:30px 30px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.18)}
 .chip{box-shadow:0 2px 0 rgba(0,0,0,.08)}
 #score{text-shadow:0 4px 0 rgba(15,118,110,.18);animation:pop .5s ease}
-#help .box{border-radius:26px;box-shadow:0 8px 0 rgba(0,0,0,.2)}
+#help .box,#about .box{border-radius:26px;box-shadow:0 8px 0 rgba(0,0,0,.2)}
 #skip{border:0;border-radius:999px;padding:8px 14px;background:var(--card);color:var(--mut);font-weight:700;font-size:13px;box-shadow:0 3px 0 var(--edge);flex:none}
 #skip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--edge)}
 #srch{width:100%;height:48px;border:2px solid var(--line);border-radius:16px;padding:0 16px;font-size:17px;font-family:inherit;background:var(--bg);color:var(--ink);box-shadow:inset 0 3px 5px rgba(0,0,0,.06);outline:none}
@@ -169,6 +169,7 @@ body{background:radial-gradient(110% 55% at 100% 0%,var(--blob1),transparent 62%
 .sr:last-child{border-bottom:0}
 .sr .l{font-size:19px}.sr .r{font-size:19px;color:#067647;text-align:right}
 .sr small{display:block;font-size:12px;color:var(--mut)}
+#copyright{opacity:.75}
 </style>
 </head>
 <body>
@@ -215,13 +216,30 @@ body{background:radial-gradient(110% 55% at 100% 0%,var(--blob1),transparent 62%
       <button class="row-btn" id="btnshare"><span class="rowico"><span class="ri" id="shareico"></span>বন্ধুদের সাথে অ্যাপ শেয়ার করো</span></button>
       <div style="height:1px;background:var(--line)"></div>
       <button class="row-btn" id="btnmail"><span class="rowico"><span class="ri" id="mailico"></span>ডেভেলপারকে ইমেইল করো</span></button>
+      <div style="height:1px;background:var(--line)"></div>
+      <button class="row-btn" id="btnabout"><span class="rowico"><span class="ri" id="aboutico"></span>About</span></button>
     </div>
     <div class="foot" id="footico"></div>
+      <div id="copyright" style="text-align:center;font-size:12px;color:var(--mut);padding:6px 0 4px">© 2026 Jonayed. All rights reserved. · v1.0</div>
     <div style="text-align:center;color:var(--mut);font-size:13px">Bangla Booster</div>
   </div>
   <div class="tabs"><button class="tb" id="tabhome2"></button><button class="tb on" id="tabset2"></button></div>
 </section>
 
+<div id="about"><div class="box" style="text-align:left">
+  <div style="font-size:20px;font-weight:700;margin-bottom:4px">Bangla Booster</div>
+  <div style="font-size:13px;color:var(--mut);margin-bottom:14px">Version 1.0</div>
+  <div style="font-size:14px;line-height:1.7">
+  Bangla Booster helps HSC students practice Bangla 2nd Paper grammar: correct spelling, technical terms, and pronunciation, using previous-year board questions.
+  <br><br>
+  Developed by <b>Jonayed</b>.
+  <br><br>
+  © 2026 Jonayed. All rights reserved.<br>
+  This app, its design, and its content may not be copied, redistributed, or reused without permission.
+  </div>
+  <button class="btn" id="aboutclose" style="margin-top:18px;height:46px;font-size:16px">Close</button>
+</div></div>
+<!-- Ownership: Jonayed, 2026-11-28, Bangla Booster (do not remove) -->
 <section class="scr" id="quiz">
   <div class="pad" style="padding-top:calc(18px + env(safe-area-inset-top));display:flex;align-items:center;gap:14px">
     <button id="close" aria-label="বন্ধ করো" style="width:40px;height:40px;border:0;border-radius:12px;background:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -290,6 +308,8 @@ function nz(s){return nk(s).replace(/[\u09CD\u200C\u200D]/g,"")}
 function nk(s){return norm(s).replace(/[\s\-\u2010\u2011\u2013\u2212]/g,"").replace(/\u09C0/g,"\u09BF").replace(/\u09C2/g,"\u09C1")}
 function loadK(k){var d=null;try{d=JSON.parse(localStorage.getItem(k))}catch(e){}return d||{s:{},st:{n:0,last:""},tot:0}}
 var DEV_EMAIL="rajonayed@gmail.com";
+/* © Jonayed 2026-11-28 — Bangla Booster — all rights reserved. Unauthorized copying prohibited. */
+var __OWNER__="Jonayed|BanglaBooster|2026";
 var DECKS={sp:{key:"banan_v1",W:window.WORDS||[]},pr:{key:"parib_v1",W:window.TERMS||[],shuf:1},pc:{key:"uccharon_v1",W:window.PRON||[],shuf:1}};
 for(var kk in DECKS)DECKS[kk].D=loadK(DECKS[kk].key);
 var dk="sp",W,N,D,isRetry=false;
@@ -429,7 +449,7 @@ function copyFallback(text,msg){
   toast(ok?msg:"কপি করা যায়নি, আবার চেষ্টা করো");
 }
 $("btnshare").onclick=function(){
-  var text="আমি Bangla Booster অ্যাপ দিয়ে এইচএসসি বাংলা ২য় পত্রের ব্যাকরণ অনুশীলন করছি। তুমিও চেষ্টা করে দেখতে পারো।";
+  var text="আমি Bangla Booster অ্যাপ দিয়ে এইচএসসি বাংলা ২য় পত্রের ব্যাকরণ অনুশীলন করছি। তুমিও চেষ্টা করে দেখতে পারো।\n\n© ২০২৬ Jonayed";
   if(window.Android&&window.Android.share){try{window.Android.share(text);return}catch(e){}}
   copyFallback(text,"লেখাটা কপি হয়েছে, যেখানে পাঠাতে চাও সেখানে পেস্ট করো");
 };
@@ -799,13 +819,17 @@ kbe.addEventListener("contextmenu",function(e){e.preventDefault()});
 $("entog").onclick=function(){var on=kbe.classList.toggle("en");this.classList.toggle("on",on);this.textContent="ইংরেজি হরফ: "+(on?"চালু":"বন্ধ")};
 $("hlp").onclick=function(){$("help").classList.add("on")};
 $("hclose").onclick=function(){$("help").classList.remove("on")};
+$("btnabout").onclick=function(){$("about").classList.add("on")};
+$("aboutclose").onclick=function(){$("about").classList.remove("on")};
+$("copyright").onclick=function(){$("about").classList.add("on")};
 $("again").onclick=function(){startSession(dk,false)};
 $("retry").onclick=function(){startSession(dk,true)};
 $("tohome").onclick=home;
 $("close").onclick=home;
 $("hint").onclick=hint;
 $("check").onclick=check;
-window.appBack=function(){if($("help").classList.contains("on")){$("help").classList.remove("on");return true}if(cur!=="home"){home();return true}return false};
+window.appBack=function(){if($("about").classList.contains("on")){$("about").classList.remove("on");return true}
+  if($("help").classList.contains("on")){$("help").classList.remove("on");return true}if(cur!=="home"){home();return true}return false};
 home();
 })();
 </script>
